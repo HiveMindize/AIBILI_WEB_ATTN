@@ -1,0 +1,1 @@
+-Se for possível selecionar um período através de click-and-drag, o PHP só precisa de olhar para o início e fim desse período e utilizar a classe DatePeriod 

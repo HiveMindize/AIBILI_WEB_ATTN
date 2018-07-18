@@ -1,0 +1,68 @@
+Introdução de período pretendido:
+	-Inserir data de início e fim
+	Solução mais simples mas menos escalável caso se pretendam períodos disjuntos
+	de férias. Solução: botão que adiciona mais campos para períodos adicionais.
+	Continua a ser impossível gerir horas específicas para cada dia (apenas para um período).
+
+	-Calendário interativo
+	Mais trabalhoso de implementar mas muito mais escalável. Permite escolher vários períodos
+	de férias sem recorrer a vários campos de formulário. 
+	Permite flexibilidade ao gerir vários períodos.
+	Torna viável gestão variável de tempo para cada dia (por exemplo, meio dia de férias em vez de um dia inteiro).
+	Também complicado de persistir. Possivelmente existem já soluções, investigar.
+
+Preferência por calendário interativo pela flexibidade acrescida. Investigar possíveis soluções já implementadas.
+
+Persistência do calendário interativo:
+	-Continuar a usar Excel e guardar informação em formato XML ou XHTML.
+	 Conteúdo Excel é fácil de  persistir via XML através de PHP.
+	 Pouco escalável: pode não ser possível integrar na intranet diretamente, obrigando a importar/exportar um ficheiro.
+
+	-Integrar conteúdo na página com script que guarde em XML.
+	 Persistível via XML/XHTML. Escalável, mas complicado de implementar sem solução externa.Investigar.
+
+	-Possível usar classe DatePeriod do PHP para definir um período entre duas datas.
+
+	Em todas as soluções é necessário recolher todas as entradas relativas a um utilizador e apresentar no mesmo mapa trimestral.
+	Impedir preencher células de fins de semana e feriados: procurar serviço de calendário que resolva este problema.
+	Preencher mapa de marcação de férias com todos os colaboradores.
+
+	Guardar períodos sempre com início e fim, apenas de mostra o período graficamente ao utilizador (JavaScript?)
+
+Base de dados:
+
+employees(name)
+
+projects(name)
+
+admins(name)
+
+departments(name, director)
+director: FK(emloyee.nome) 
+
+supervises_project(supervisor, project)
+supervisor: FK(employee.name)
+project: FK(project.name)
+
+supervises_employee(supervisor, employee)
+supervisor: FK(employee.name)
+employee: FK(employee.name)
+
+collaborates(employee, project)
+employee: FK(employee.name)
+project: FK(project.name)
+
+requests(employee, type, begin, end)
+employee: FK(employee.name)
+
+holiday_map(employee, begin, end)
+employee: FK(employee.name)
+
+
+Chefia direta:
+-Supervisor-colaborador. Um colaborador pode ter vários supervisores, em projetos/atividades diferentes. Muitos para muitos. 
+Associável pelas relações supervisiona_projeto e colabora. Confirmar se possível.
+
+Direção de unidade:
+Diretor-chefe. Uma unidade tem um diretor, associar aos chefes que trabalham nessa área. Um para muitos.
+
