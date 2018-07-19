@@ -51,7 +51,7 @@ Tabela extra na base de dados com uma entrada para cada feriado: dia e mês.
 Por agora apenas uma string (absence/vacation). Sujeito a mudar aquando do desenvolvimento em PHP.
 
 # Estrutura de pastas:
-	-AIBILI_WEB_ATTN
+	-AIBILI_WEB_ATTN/
 		-index.html/php
 		-php/
 		-css/
