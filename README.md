@@ -28,7 +28,13 @@ Financeiro - Mesmas operações do CEO, excepto que não pode aceitar ou rejeita
 **Modelo Relacional da BD**
 
 ```
-colaborador()
+colaborador(username, nome, email)
+PK: username
+
+supervisiona(supervisor, colaborador)
+PK: (supervisiona, colaborador)
+supervisiona: FK(colaborador.username)
+colaborador: FK(colaborador. username)
 ```
 
 ## Autenticação integrada com AD - tabelas adicionais:
