@@ -1,17 +1,5 @@
-Introdução de período pretendido:
-	-Inserir data de início e fim
-	Solução mais simples mas menos escalável caso se pretendam períodos disjuntos
-	de férias. Solução: botão que adiciona mais campos para períodos adicionais.
-	Continua a ser impossível gerir horas específicas para cada dia (apenas para um período).
+Introduzir data de início e fim para
 
-	-Calendário interativo
-	Mais trabalhoso de implementar mas muito mais escalável. Permite escolher vários períodos
-	de férias sem recorrer a vários campos de formulário. 
-	Permite flexibilidade ao gerir vários períodos.
-	Torna viável gestão variável de tempo para cada dia (por exemplo, meio dia de férias em vez de um dia inteiro).
-	Também complicado de persistir. Possivelmente existem já soluções, investigar.
-
-Preferência por calendário interativo pela flexibidade acrescida. Investigar possíveis soluções já implementadas.
 
 Persistência do calendário interativo:
 	-Continuar a usar Excel e guardar informação em formato XML ou XHTML.
@@ -25,38 +13,10 @@ Persistência do calendário interativo:
 	Impedir preencher células de fins de semana e feriados: procurar serviço de calendário que resolva este problema.
 	Preencher mapa de marcação de férias com todos os colaboradores.
 
-	Guardar períodos sempre com início e fim, apenas de mostra o período graficamente ao utilizador (JavaScript?)
+	Guardar períodos sempre com início e fim, apenas mostra o período graficamente ao utilizador (JavaScript)
 
 	Tabela de feriados nacionais: deixar para quando a funcionalidade estiver realizada. Em princípio,
 	será suficiente uma tabela com as datas em texto (dia e mês).
 
-Base de dados:
-
-employee(name, username, department)
-
-project(name)
-
-admin(username, type)
-
-department(name, director)
-director: FK(employees.username) 
-
-supervises(supervisor, employee)
-supervisor: FK(employees.username)
-employee: FK(employees.username)
-
-collaborates(employee, project)
-employee: FK(employee.username)
-project: FK(project.name)
-
-request(employee, type, begin, end, state)
-employee: FK(employee.username)
-
-holiday_map(employee, type, begin, end)
-employee: FK(employee.username)
-
-activity_map(employee, activity, project, begin, end)
-employee: FK(employee.username)
-department: FK(department.name)
 
 
