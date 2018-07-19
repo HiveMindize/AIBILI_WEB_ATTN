@@ -1,33 +1,31 @@
-Introdução de período pretendido:
-	-Inserir data de início e fim
-	Solução mais simples mas menos escalável caso se pretendam períodos disjuntos
-	de férias. Solução: botão que adiciona mais campos para períodos adicionais.
-	Continua a ser impossível gerir horas específicas para cada dia (apenas para um período).
+Introduï¿½ï¿½o de perï¿½odo pretendido:
+	-Inserir data de inï¿½cio e fim
+	Soluï¿½ï¿½o mais simples mas menos escalï¿½vel caso se pretendam perï¿½odos disjuntos
+	de fï¿½rias. Soluï¿½ï¿½o: botï¿½o que adiciona mais campos para perï¿½odos adicionais.
+	Continua a ser impossï¿½vel gerir horas especï¿½ficas para cada dia (apenas para um perï¿½odo).
 
-	-Calendário interativo
-	Mais trabalhoso de implementar mas muito mais escalável. Permite escolher vários períodos
-	de férias sem recorrer a vários campos de formulário. 
-	Permite flexibilidade ao gerir vários períodos.
-	Torna viável gestão variável de tempo para cada dia (por exemplo, meio dia de férias em vez de um dia inteiro).
-	Também complicado de persistir. Possivelmente existem já soluções, investigar.
+	-Calendï¿½rio interativo
+	Mais trabalhoso de implementar mas muito mais escalï¿½vel. Permite escolher vï¿½rios perï¿½odos
+	de fï¿½rias sem recorrer a vï¿½rios campos de formulï¿½rio. 
+	Permite flexibilidade ao gerir vï¿½rios perï¿½odos.
+	Torna viï¿½vel gestï¿½o variï¿½vel de tempo para cada dia (por exemplo, meio dia de fï¿½rias em vez de um dia inteiro).
+	Tambï¿½m complicado de persistir. Possivelmente existem jï¿½ soluï¿½ï¿½es, investigar.
 
-Preferência por calendário interativo pela flexibidade acrescida. Investigar possíveis soluções já implementadas.
+Preferï¿½ncia por calendï¿½rio interativo pela flexibidade acrescida. Investigar possï¿½veis soluï¿½ï¿½es jï¿½ implementadas.
 
-Persistência do calendário interativo:
-	-Continuar a usar Excel e guardar informação em formato XML ou XHTML.
-	 Conteúdo Excel é fácil de  persistir via XML através de PHP.
-	 Pouco escalável: pode não ser possível integrar na intranet diretamente, obrigando a importar/exportar um ficheiro.
+Persistï¿½ncia do calendï¿½rio interativo:
+	-Continuar a usar Excel e guardar informaï¿½ï¿½o em formato XML ou XHTML.
+	 Conteï¿½do Excel ï¿½ fï¿½cil de  persistir via XML atravï¿½s de PHP.
+	 Pouco escalï¿½vel: pode nï¿½o ser possï¿½vel integrar na intranet diretamente, obrigando a importar/exportar um ficheiro.
 
-	-Integrar conteúdo na página com script que guarde em XML.
-	 Persistível via XML/XHTML. Escalável, mas complicado de implementar sem solução externa.Investigar.
+	-Integrar conteï¿½do na pï¿½gina com script que guarde em XML.
+	 Persistï¿½vel via XML/XHTML. Escalï¿½vel, mas complicado de implementar sem soluï¿½ï¿½o externa.Investigar.
 
-	-Possível usar classe DatePeriod do PHP para definir um período entre duas datas.
+	Em todas as soluï¿½ï¿½es ï¿½ necessï¿½rio recolher todas as entradas relativas a um utilizador e apresentar no mesmo mapa trimestral.
+	Impedir preencher cï¿½lulas de fins de semana e feriados: procurar serviï¿½o de calendï¿½rio que resolva este problema.
+	Preencher mapa de marcaï¿½ï¿½o de fï¿½rias com todos os colaboradores.
 
-	Em todas as soluções é necessário recolher todas as entradas relativas a um utilizador e apresentar no mesmo mapa trimestral.
-	Impedir preencher células de fins de semana e feriados: procurar serviço de calendário que resolva este problema.
-	Preencher mapa de marcação de férias com todos os colaboradores.
-
-	Guardar períodos sempre com início e fim, apenas de mostra o período graficamente ao utilizador (JavaScript?)
+	Guardar perï¿½odos sempre com inï¿½cio e fim, apenas de mostra o perï¿½odo graficamente ao utilizador (JavaScript?)
 
 Base de dados:
 
@@ -60,9 +58,9 @@ employee: FK(employee.name)
 
 
 Chefia direta:
--Supervisor-colaborador. Um colaborador pode ter vários supervisores, em projetos/atividades diferentes. Muitos para muitos. 
-Associável pelas relações supervisiona_projeto e colabora. Confirmar se possível.
+-Supervisor-colaborador. Um colaborador pode ter vï¿½rios supervisores, em projetos/atividades diferentes. Muitos para muitos. 
+Associï¿½vel pelas relaï¿½ï¿½es supervisiona_projeto e colabora. Confirmar se possï¿½vel.
 
-Direção de unidade:
-Diretor-chefe. Uma unidade tem um diretor, associar aos chefes que trabalham nessa área. Um para muitos.
+Direï¿½ï¿½o de unidade:
+Diretor-chefe. Uma unidade tem um diretor, associar aos chefes que trabalham nessa ï¿½rea. Um para muitos.
 
