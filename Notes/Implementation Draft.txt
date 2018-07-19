@@ -28,11 +28,11 @@ Persistência do calendário interativo:
 	Guardar períodos sempre com início e fim, apenas de mostra o período graficamente ao utilizador (JavaScript?)
 
 	Tabela de feriados nacionais: deixar para quando a funcionalidade estiver realizada. Em princípio,
-	será suficiente umatabela com as datas em texto, formato YYYYMMDD.
+	será suficiente uma tabela com as datas em texto (dia e mês).
 
 Base de dados:
 
-employee(name, username)
+employee(name, username, department)
 
 project(name)
 
@@ -41,11 +41,7 @@ admin(username, type)
 department(name, director)
 director: FK(employees.username) 
 
-supervises_project(supervisor, project)
-supervisor: FK(employees.username)
-project: FK(project.name)
-
-supervises_employee(supervisor, employee)
+supervises(supervisor, employee)
 supervisor: FK(employees.username)
 employee: FK(employees.username)
 
@@ -53,18 +49,14 @@ collaborates(employee, project)
 employee: FK(employee.username)
 project: FK(project.name)
 
-requests(employee, type, begin, end)
+request(employee, type, begin, end, state)
 employee: FK(employee.username)
 
-holiday_map(employee, department, type, begin, end)
+holiday_map(employee, type, begin, end)
 employee: FK(employee.username)
-Requerime
-activity_map(employee, department, activity, project, begin, end)
 
-Chefia direta:
--Supervisor-colaborador. Um colaborador pode ter vários supervisores, em projetos/atividades diferentes. Muitos para muitos. 
-Associável pelas relações supervisiona_projeto e colabora. Confirmar se possível.
+activity_map(employee, activity, project, begin, end)
+employee: FK(employee.username)
+department: FK(department.name)
 
-Direção de unidade:
-Diretor-chefe. Uma unidade tem um diretor, associar aos chefes que trabalham nessa área. Um para muitos.
 
