@@ -25,6 +25,12 @@ Financeiro - Mesmas operações do CEO, excepto que não pode aceitar ou rejeita
 # Modelo de Dados
 [Entity-Relationship Model](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
+**Modelo Relacional da BD**
+
+```
+colaborador()
+```
+
 ## Autenticação integrada com AD - tabelas adicionais:
 
 Autenticação assegurada pelas tabelas:  
