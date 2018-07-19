@@ -29,33 +29,34 @@ Persistência do calendário interativo:
 
 Base de dados:
 
-employees(name)
+employees(name, username)
 
-projects(name)
+projects(name, username)
 
-admins(name)
+admins(name, username)
 
 departments(name, director)
-director: FK(emloyee.nome) 
+director: FK(employees.username) 
 
 supervises_project(supervisor, project)
-supervisor: FK(employee.name)
+supervisor: FK(employees.username)
 project: FK(project.name)
 
 supervises_employee(supervisor, employee)
-supervisor: FK(employee.name)
-employee: FK(employee.name)
+supervisor: FK(employees.username)
+employee: FK(employees.username)
 
 collaborates(employee, project)
-employee: FK(employee.name)
+employee: FK(employee.username)
 project: FK(project.name)
 
 requests(employee, type, begin, end)
-employee: FK(employee.name)
+employee: FK(employee.username)
 
-holiday_map(employee, begin, end)
-employee: FK(employee.name)
+holiday_map(employee, department, type, begin, end)
+employee: FK(employee.username)
 
+activity_map(employee, department, activity, project, begin, end)
 
 Chefia direta:
 -Supervisor-colaborador. Um colaborador pode ter vários supervisores, em projetos/atividades diferentes. Muitos para muitos. 
