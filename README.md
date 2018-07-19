@@ -1,4 +1,4 @@
-#Validação dos diagramas de casos de uso:
+# Validação dos diagramas de casos de uso:
 [UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
 	Colaborador - Pode criar requerimentos de férias ou reportar ausências, podendo anexar documentos no processo. Pode
@@ -25,10 +25,10 @@
 
 
 
-#Modelo de Dados
+# Modelo de Dados
 	[Entity-Relationship Model](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
-	##Autenticação integrada com AD - tabelas adicionais:
+	## Autenticação integrada com AD - tabelas adicionais:
 
 		Autenticação assegurada pelas tabelas:
 		-Colaboradores apenas podem ver entradas que correspondem a si próprios. 
@@ -41,17 +41,17 @@
 
 		No início do processo, verificar o nome de utilizador e fazer as queries apropriadas.
 
-	##Configurações:
+	## Configurações:
 
-	##Tabelas de feriados nacionais:
+	## Tabelas de feriados nacionais:
 		Tabela extra na base de dados com uma entrada para cada feriado: dia e mês.
 
-	##Templates:
+	## Templates:
 
-	##Dados de ausências / férias - codificação:
+	## Dados de ausências / férias - codificação:
 		Por agora apenas uma string (absence/vacation). Sujeito a mudar aquando do desenvolvimento em PHP.
 
-	#Estrutura de pastas:
+	# Estrutura de pastas:
 		-AIBILI_WEB_ATTN
 			-index.html/php
 			-php
