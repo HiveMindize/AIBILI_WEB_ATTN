@@ -1,5 +1,5 @@
 #Validação dos diagramas de casos de uso:
-	[UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
+[UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
 	Colaborador - Pode criar requerimentos de férias ou reportar ausências, podendo anexar documentos no processo. Pode
 				  consultar os seus requerimentos, modificar requerimentos que não tenham sido aceites ou rejeitados ainda, e
@@ -51,7 +51,7 @@
 	##Dados de ausências / férias - codificação:
 		Por agora apenas uma string (absence/vacation). Sujeito a mudar aquando do desenvolvimento em PHP.
 
-	##Estrutura de pastas:
+	#Estrutura de pastas:
 		-AIBILI_WEB_ATTN
 			-index.html/php
 			-php
