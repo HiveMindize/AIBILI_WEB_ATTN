@@ -27,15 +27,18 @@ Persistência do calendário interativo:
 
 	Guardar períodos sempre com início e fim, apenas de mostra o período graficamente ao utilizador (JavaScript?)
 
+	Tabela de feriados nacionais: deixar para quando a funcionalidade estiver realizada. Em princípio,
+	será suficiente umatabela com as datas em texto, formato YYYYMMDD.
+
 Base de dados:
 
-employees(name, username)
+employee(name, username)
 
-projects(name, username)
+project(name)
 
-admins(name, username)
+admin(username, type)
 
-departments(name, director)
+department(name, director)
 director: FK(employees.username) 
 
 supervises_project(supervisor, project)
@@ -55,7 +58,7 @@ employee: FK(employee.username)
 
 holiday_map(employee, department, type, begin, end)
 employee: FK(employee.username)
-
+Requerime
 activity_map(employee, department, activity, project, begin, end)
 
 Chefia direta:
