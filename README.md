@@ -27,7 +27,7 @@ Financeiro - Mesmas operações do CEO, excepto que não pode aceitar ou rejeita
 
 ## Autenticação integrada com AD - tabelas adicionais:
 
-Autenticação assegurada pelas tabelas:
+Autenticação assegurada pelas tabelas:  
 -Colaboradores apenas podem ver entradas que correspondem a si próprios. 
 
 -Coordenadores podem ver as suas entradas e as dos colaboradores que supervisionam.
