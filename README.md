@@ -122,11 +122,12 @@ Na base de dados, ausências pontuais e férias são guardadas em tabelas separa
 
 # Estrutura de pastas:
 	-AIBILI_WEB_ATTN/
-		-index.html/php
+		-index.php
+		-include
 		-php/
 		-css/
 		-js/
-		-sql/db
+		-sql
 
 
 
