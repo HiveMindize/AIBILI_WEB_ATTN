@@ -1,6 +1,3 @@
-Introduzir data de início e fim para
-
-
 Persistência do calendário interativo:
 	-Continuar a usar Excel e guardar informação em formato XML ou XHTML.
 	 Conteúdo Excel é fácil de  persistir via XML através de PHP.
