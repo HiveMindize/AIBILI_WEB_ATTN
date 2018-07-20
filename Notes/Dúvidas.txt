@@ -1,4 +1,6 @@
 -Atividades:
 	Registadas pelo supervisor e realizadas pelo colaborador?
-	Requeridas como ausências e férias?
-	Se calar era melhor deixar as atividades para depois; priorizar as ausências e férias
+	Requeridas como ausências e férias? Aprovadas pelo mesmo processo de aprovação?
+	Se calhar era melhor deixar as atividades para depois; priorizar as ausências e férias
+
+Feriados: carregar sempre que se inicia a aplicação? atualizar todos os anos? manter guardadas todas as datas?
