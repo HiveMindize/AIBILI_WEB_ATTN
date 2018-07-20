@@ -1,12 +1,11 @@
 # Descrição do domínio
 Um colaborador é identificado pelo seu nome de utilizador e caraterizado pelo seu nome completo.  
 Um colaborador pode ser administrador, que é caraterizado pela sua função (CEO ou financeiro).  
-Um colaborador pode pertencer a uma equipa, tendo nesse caso um supervisor.  
-Considera-se que colaboradores supervisionados pelo mesmo colaborador pertencem à mesma equipa.  
+Um colaborador pode pertencer a uma ou várias equipas (ou nenhuma), tendo nesse caso um supervisor para cada equipa.  
 
 Uma unidade é identificada pelo seu nome.  
-Um colaborador pertence a uma única unidade. Uma unidade tem pelo menos um colaborador.  
-Uma unidade tem sempre um único diretor. Um diretor pode apenas dirigir uma unidade de cada vez.  
+Um colaborador pertence a uma ou mais unidadew. Uma unidade tem pelo menos um colaborador.  
+Uma unidade tem sempre um único diretor de cada vez (podem delegar). Um diretor pode apenas dirigir uma unidade de cada vez.  
 
 Um projeto é identificado pelo seu nome.  
 Um colaborador pode colaborar em projectos. Um projecto pode ter vários colaboradores.  
