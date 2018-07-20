@@ -18,7 +18,6 @@ Um colaborador pode fazer um requerimento de ausência. Uma ausência é identif
 ausências sobrepostas. Um requerimento tem um identificador único e pode estar num de três estados: pendente, aprovado ou rejeitado.  
 Uma ausência pode ser pontual (por exemplo, uma consulta) ou um período de férias. Ausências pontuais têm uma categoria e são  acompanhadas de um documento justificativo.  
 
-
 # Validação dos diagramas de casos de uso
 [UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
