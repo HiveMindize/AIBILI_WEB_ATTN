@@ -42,7 +42,7 @@ CEO - Mesmas operações do diretor. Adicionalmente:
 		  Pode consultar e exportar os mapas de todas as unidades da organização.  
 		  Pode aprovar um requerimento após ter sido aprovado por todos os nós da cadeia.
 
-Financeiro - Mesmas operações do CEO, excepto que não pode aceitar ou rejeitar um requerimento.
+Financeiro - Mesmas operações do CEO, exceto que não pode aceitar ou rejeitar um requerimento.
 
 
 # Modelo de Dados
@@ -50,16 +50,49 @@ Financeiro - Mesmas operações do CEO, excepto que não pode aceitar ou rejeita
 
 **Modelo Relacional da BD**
 
-
-
 ```
-colaborador(username, nome, email)
+colaborador(username, nome)
 PK: username
 
-supervisiona(supervisor, colaborador)
-PK: (supervisor, colaborador)
-supervisiona: FK(colaborador.username)
+administrador(username, nome, função)
+
+atividade(id, colaborador, nome, inicio, duracao)
+PK: id 
 colaborador: FK(colaborador.username)
+
+projeto(nome)
+
+colabora(colaborador, projeto)
+PK: (colaborador, projeto)
+colaborador: FK:(colaborador.username)
+
+unidade: (nome, diretor)
+PK: nome
+diretor: FK(colaborador.username)
+
+pertence(colaborador, unidade)
+PK: (colaborador, unidade)
+colaborador: FK(colaborador.username)
+unidade: FK(unidade.nome)
+
+diretor(colaborador, unidade)
+PK: (colaborador, unidade)
+colaborador: FK(colaborador.username)
+unidade: FK(unidade.nome)
+
+ausencia_pontual(inicio, fim, colaborador, categoria, doc, estado)
+PK: (id, colaborador)
+colaborador: FK(colaborador.username)
+
+ausencia_ferias(inicio, fim, colaborador, estado)
+PK: (id, colaborador)
+colaborador: FK(colaborador.username)
+
+requerimento(id, colaborador, estado, observacoes)
+PK: id
+colaborador: FK(colaborador.username)
+
+inicio e fim não se podem sobrepor entre ausencia_pontual e ausencia_ferias.
 ```
 
 ## Autenticação integrada com AD - tabelas adicionais:
@@ -76,14 +109,18 @@ Autenticação assegurada pelas tabelas:
 No início do processo, verificar o nome de utilizador e fazer as queries apropriadas.
 
 ## Configurações:
+Variável (global?) cujo valor muda consoante o nível hierárquico do colaborador. Gerir acesso a partir desse princípio.
 
 ## Tabelas de feriados nacionais:
-Tabela extra na base de dados com uma entrada para cada feriado: dia e mês.
+Tabela extra na base de dados ou ficheiro de texto no servidor com uma entrada para cada feriado: dia e mês.
+Atualizar anualmente?
 
 ## Templates:
+Tabela extra na base de dados com designação da template, tempo que ocupa e periodicidade (semanal, mensal, etc).  
+Passível de se introduzir na agenda com a periodicidade pretendida.
 
 ## Dados de ausências / férias - codificação:
-Por agora apenas uma string (absence/vacation). Sujeito a mudar aquando do desenvolvimento em PHP.
+Na base de dados, ausências pontuais e férias são guardadas em tabelas separadas. A decidir em front-end.
 
 # Estrutura de pastas:
 	-AIBILI_WEB_ATTN/
