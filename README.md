@@ -52,17 +52,25 @@ Financeiro - Mesmas operações do CEO, exceto que não pode aceitar ou rejeitar
 colaborador(username, nome)
 PK: username
 
-administrador(username, nome, função)
+administrador(username, função)
+PK: username
 
-atividade(id, colaborador, nome, inicio, duracao)
+atividade(id, colaborador, descricao, inicio, duracao)
 PK: id 
 colaborador: FK(colaborador.username)
 
-projeto(nome)
+projeto(descricao)
+PK: descricao
+
+associada(projeto, atividade)
+PK: (projeto, atividade)
+projeto: FK(projeto.nome)
+atividade: FK(atividade.nome)
 
 colabora(colaborador, projeto)
 PK: (colaborador, projeto)
-colaborador: FK:(colaborador.username)
+colaborador: FK(colaborador.username)
+projeto: FK(projeto.descricao)
 
 unidade: (nome, diretor)
 PK: nome
@@ -78,19 +86,13 @@ PK: (colaborador, unidade)
 colaborador: FK(colaborador.username)
 unidade: FK(unidade.nome)
 
-ausencia_pontual(inicio, fim, colaborador, categoria, doc, estado)
-PK: (id, colaborador)
-colaborador: FK(colaborador.username)
-
-ausencia_ferias(inicio, fim, colaborador, estado)
-PK: (id, colaborador)
-colaborador: FK(colaborador.username)
-
-requerimento(id, colaborador, estado, observacoes)
+requerimento(id, colaborador, inicio, fim, estado, observacoes)
 PK: id
 colaborador: FK(colaborador.username)
 
-inicio e fim não se podem sobrepor entre ausencia_pontual e ausencia_ferias.
+requerimento_ausencia(id, categoria, url_doc)
+PK: id
+id: FK(requerimento.id)
 ```
 
 ## Autenticação integrada com AD - tabelas adicionais:
@@ -127,7 +129,7 @@ Na base de dados, ausências pontuais e férias são guardadas em tabelas separa
 		-php/
 		-css/
 		-js/
-		-sql
+		-sql/
 
 
 
