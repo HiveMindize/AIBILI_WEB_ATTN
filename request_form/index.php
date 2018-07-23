@@ -16,7 +16,7 @@
 	
 		<h1>Pedido de dispensa</h1>
 
-		<form action="php/save.php" method="post">
+ 		<form method="post" >
 			<h3>Tipo</h3>
 			<label for="absence">Ausência</label>	
 			<input type="radio" name="type" id="absence" value="absence" checked>
@@ -34,5 +34,40 @@
 			<br />
 			<input type="submit">
 		</form>
+
+		<?php
+
+			require 'php/requerimento.php';
+
+			$define("ADMIN", 0);
+
+			$dbtype = "mysql";
+			$host = "localhost";
+			$port = 3306;
+			$dbname = "aibili_web_attn";
+			$user = "root";
+			$password = "";
+
+			$username = "dfcoimbra";
+
+			echo("Autenticar...<br/>");
+
+
+
+			echo ("Determinar supervisores...<br />");
+
+			$db = connect($dbtype, $host, $port, $dbname, $user, $password);
+
+			$sql = "SELECT supervisor FROM supervisiona WHERE colaborador = 'dfcoimbra';";
+
+			$result = $db->query($sql);
+
+			foreach ($result as $row) {
+				
+				echo ($row['supervisor'] . "<br />");
+			}
+
+			echo("Submeter requerimento...<br />");
+		?>
 	</body>
 </html> 

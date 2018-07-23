@@ -130,6 +130,4 @@ Na base de dados, ausências pontuais e férias são guardadas em tabelas separa
 		-css/
 		-js/
 		-sql/
-
-
-
+		
