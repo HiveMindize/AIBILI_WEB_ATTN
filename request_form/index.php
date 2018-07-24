@@ -12,6 +12,32 @@
 	</head>
 	
 	<body>
+
+		<?php
+
+			require 'php/lib.php';
+
+			define("ADMIN", 0);
+			define("DIRETOR", 1);
+			define("COORDENADOR", 2);
+			define("COLABORADOR", 3);
+
+			$dbtype = "mysql";
+			$host = "localhost";
+			$port = 3306;
+			$dbname = "aibili_web_attn";
+			$user = "root";
+			$password = "";
+
+			$username = "dfcoimbra";
+
+			$db = connect($dbtype, $host, $port, $dbname, $user, $password);
+
+			echo("Autenticar...<br/>");
+
+
+		?>
+		
 		<img src="https://www.aibili.pt/ficheiros/Logo_AIBILI_portugus.jpg" alt="Logo_AIBILI_portugus" width="250" height="50" >
 	
 		<h1>Pedido de dispensa</h1>
@@ -35,39 +61,6 @@
 			<input type="submit">
 		</form>
 
-		<?php
-
-			require 'php/requerimento.php';
-
-			$define("ADMIN", 0);
-
-			$dbtype = "mysql";
-			$host = "localhost";
-			$port = 3306;
-			$dbname = "aibili_web_attn";
-			$user = "root";
-			$password = "";
-
-			$username = "dfcoimbra";
-
-			echo("Autenticar...<br/>");
-
-
-
-			echo ("Determinar supervisores...<br />");
-
-			$db = connect($dbtype, $host, $port, $dbname, $user, $password);
-
-			$sql = "SELECT supervisor FROM supervisiona WHERE colaborador = 'dfcoimbra';";
-
-			$result = $db->query($sql);
-
-			foreach ($result as $row) {
-				
-				echo ($row['supervisor'] . "<br />");
-			}
-
-			echo("Submeter requerimento...<br />");
-		?>
+		
 	</body>
 </html> 

@@ -1,5 +1,4 @@
 <?php
-
 // argumentos: $dbtype: tipo de base de dados: MySQL, PostgreSQL, etc.
 //			   $host: endereço IP do servidor de bases de dados
 //             $port: porto de ligação a base de dados
