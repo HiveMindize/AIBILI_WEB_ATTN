@@ -14,35 +14,29 @@
 	<body>
 
 		<?php
+			require 'php/lib.php';	
+			require 'php/setup.php';
 
-			require 'php/lib.php';
+			include 'php/header.php';
 
-			define("ADMIN", 0);
-			define("DIRETOR", 1);
-			define("COORDENADOR", 2);
-			define("COLABORADOR", 3);
+			$superiores = determinaSuperiores($db, $username, $hierarquia);
 
-			$dbtype = "mysql";
-			$host = "localhost";
-			$port = 3306;
-			$dbname = "aibili_web_attn";
-			$user = "root";
-			$password = "";
+			echo(implode($superiores));
 
-			$username = "dfcoimbra";
+			$type = $dates = $motive = "";
 
-			$db = connect($dbtype, $host, $port, $dbname, $user, $password);
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-			echo("Autenticar...<br/>");
-
-
+				$type = test_input($_POST["type"]);
+				$dates = test_input($_POST["dates"]);
+				$motive = test_input($_POST["motive"]);
+			}
 		?>
 		
-		<img src="https://www.aibili.pt/ficheiros/Logo_AIBILI_portugus.jpg" alt="Logo_AIBILI_portugus" width="250" height="50" >
 	
 		<h1>Pedido de dispensa</h1>
 
- 		<form method="post" >
+ 		<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 			<h3>Tipo</h3>
 			<label for="absence">Ausência</label>	
 			<input type="radio" name="type" id="absence" value="absence" checked>
@@ -60,6 +54,13 @@
 			<br />
 			<input type="submit">
 		</form>
+
+		<?php
+			echo($type . '<br />');
+			echo($dates . '<br />');
+			echo($motive . '<br />');
+
+		?>
 
 		
 	</body>
