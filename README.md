@@ -86,7 +86,7 @@ PK: (colaborador, unidade)
 colaborador: FK(colaborador.username)
 unidade: FK(unidade.nome)
 
-requerimento(id, colaborador, inicio, fim, estado, observacoes)
+requerimento(id, colaborador, inicio, fim, contador, estado, observacoes)
 PK: id
 colaborador: FK(colaborador.username)
 
