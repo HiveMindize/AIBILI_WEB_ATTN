@@ -4,3 +4,5 @@
 	Se calhar era melhor deixar as atividades para depois; priorizar as ausências e férias
 
 Feriados: carregar sempre que se inicia a aplicação? atualizar todos os anos? manter guardadas todas as datas?
+
+Workflow: coordenadores encaminham para o seu coordenador ou para o diretor da unidade?
