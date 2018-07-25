@@ -8,33 +8,33 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script type="text/javascript" src="js/datepicker.js"></script>
+        <script type="text/javascript" src="../js/datepicker.js"></script>
     </head>
     
     <body>
 
         <?php
-            require 'php/lib.php';  
-            require 'php/setup.php';
+            require 'lib.php';  
+            require 'setup.php';
 
-            include 'php/header.php';
+            include 'header.php';
 
             if ($hierarquia == COLABORADOR || $hierarquia == COORDENADOR) {
                 
                 $superiores = determinaSuperiores($db, $username, $hierarquia);
             }
 
-            $contador = count($superiores);
+            $autorizacoes = count($superiores);
 
             $tipo = $datas = $motivo = "";
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $tipo = testInput($_POST["tipo"]);
-                $datas = testInput($_POST["datas"]);
+                $datas = explode(" - ", testInput($_POST["datas"]));
                 $motivo = testInput($_POST["motivo"]);
 
-                submeteRequerimento($db, $username, $tipo, $datas, $contador, $motivo);
+                submeteRequerimento($db, $username, $tipo, $datas, $autorizacoes, $motivo);
             }
         ?>
         
@@ -59,5 +59,12 @@
             <input type="submit">
         </form>
         
+        <?php
+            echo("Tipo: $tipo<br />
+                  Início: $datas[0]<br />
+                  Fim: $datas[1]<br />
+                  Autorizações necessárias: $autorizacoes<br />
+                  Motivo: $motivo<br />");
+        ?>
     </body>
 </html> 

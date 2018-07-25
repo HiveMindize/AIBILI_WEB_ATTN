@@ -1,4 +1,10 @@
 <?php
+define("CEO", 0);
+define("FINANCEIRO", 1);
+define("DIRETOR", 2);
+define("COORDENADOR", 3);
+define("COLABORADOR", 4);
+
 // connect
 // argumentos: $dbtype: tipo de base de dados: MySQL, PostgreSQL, etc.
 //             $host: endereço IP do servidor de bases de dados
@@ -7,18 +13,11 @@
 //             $user: nome de utilizador para login na base de dados
 //             $password: para login na base de dados
 // retorno: PDO que permite fazer queries na base de dados especificada
-define("CEO", 0);
-define("FINANCEIRO", 1);
-define("DIRETOR", 2);
-define("COORDENADOR", 3);
-define("COLABORADOR", 4);
-
-
 function connect($dbtype, $host, $port, $dbname, $user, $password) {
 
     try {
 
-        $db= new PDO($dbtype . ':host=' . $host . ';port=' . $port . ';dbname=' . $dbname . ';', $user, $password);
+        $db = new PDO($dbtype . ':host=' . $host . ';port=' . $port . ';dbname=' . $dbname . ';', $user, $password);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         return $db;
@@ -282,23 +281,24 @@ function determinaDiretores($db, $username) {
 // submete um requerimento de ausencia na base de dados
 // argumentos: $db: PDO para a base de dados usada
 //             $username: utilizador para o qual determinar superiores
-//             $tipo: 
-function submeteRequerimento($db, $username, $tipo, $datas, $contador, $motivo) {
+//             $tipo: ausencia ou ferias
+//             $datas: array com data de inicio e fim, em formato YYYY-MM-DD HH:ss
+//             $autorizacoes: numero de autorizacoes requeridas pelo nivel hierarquico seguinte
+//             $
+function submeteRequerimento($db, $username, $tipo, $datas, $autorizacoes, $motivo) {
 
     $db->query("START TRANSACTION;");
 
     $id = uniqid($username);
 
-    $datas = explode(" - ", $datas);
-
-    $query = "INSERT INTO requerimento(id, colaborador, inicio, fim, contador, estado, observacoes)
+    $query = "INSERT INTO requerimento(id, colaborador, inicio, fim, autorizacoes, estado, observacoes)
               VALUES (:id, :username, :inicio, :fim, :contador, :estado, :observacoes);";
 
-    $parameters = array(':id' => $id,':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':contador' => $contador, ':estado' => "PENDENTE", ':observacoes' => $motivo);
+    $parameters = array(':id' => $id,':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':contador' => $autorizacoes, ':estado' => "PENDENTE", ':observacoes' => $motivo);
 
     execute($db, $query, $parameters);
 
-    if ($tipo = "ausencia") {
+    if ($tipo === "ausencia") {
 
         $query = "INSERT INTO requerimento_ausencia(id)
                   VALUES (:id);";
