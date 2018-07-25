@@ -45,25 +45,25 @@ CREATE TABLE `supervisiona` (
 
 
 CREATE TABLE `requerimento` (
- `id` int(11) NOT NULL,
+ `id` varchar(64) NOT NULL,
  `colaborador` varchar(64) NOT NULL,
- `inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
- `fim` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+ `inicio` datetime NOT NULL,
+ `fim` datetime NOT NULL,
+ `contador` int(11) NOT NULL,
  `estado` varchar(64) NOT NULL,
- `observacoes` text NOT NULL,
+ `observacoes` text,
  PRIMARY KEY (`id`),
  KEY `fk_colaborador_requerimento` (`colaborador`),
  CONSTRAINT `fk_colaborador_requerimento` FOREIGN KEY (`colaborador`) REFERENCES `colaborador` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 
 CREATE TABLE `requerimento_ausencia` (
- `id` int(11) NOT NULL,
- `categoria` varchar(64) NOT NULL,
- `url_doc` text NOT NULL,
+ `id` varchar(64) NOT NULL,
+ `url_doc` text,
  PRIMARY KEY (`id`),
  CONSTRAINT `fk_id_requerimento` FOREIGN KEY (`id`) REFERENCES `requerimento` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 
 CREATE TABLE `pertence` (
