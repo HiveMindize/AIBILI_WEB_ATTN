@@ -49,7 +49,6 @@ CREATE TABLE `requerimento` (
  `colaborador` varchar(64) NOT NULL,
  `inicio` datetime NOT NULL,
  `fim` datetime NOT NULL,
- `contador` int(11) NOT NULL,
  `estado` varchar(64) NOT NULL,
  `observacoes` text,
  PRIMARY KEY (`id`),
@@ -63,6 +62,21 @@ CREATE TABLE `requerimento_ausencia` (
  `url_doc` text,
  PRIMARY KEY (`id`),
  CONSTRAINT `fk_id_requerimento` FOREIGN KEY (`id`) REFERENCES `requerimento` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+CREATE TABLE `requerimento_ferias` (
+ `id` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+CREATE TABLE `destinatario` (
+ `id` varchar(64) NOT NULL,
+ `username` varchar(64) NOT NULL,
+ PRIMARY KEY (`id`,`username`),
+ KEY `destinatario_username_colaborador` (`username`),
+ CONSTRAINT `destinatario_id_requerimento` FOREIGN KEY (`id`) REFERENCES `requerimento` (`id`),
+ CONSTRAINT `destinatario_username_colaborador` FOREIGN KEY (`username`) REFERENCES `colaborador` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 

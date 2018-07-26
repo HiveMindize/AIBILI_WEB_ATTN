@@ -35,8 +35,6 @@ function connect($dbtype, $host, $port, $dbname, $user, $password) {
 // retorno: nível hierarquico do colaborador, ou erro se nao existir
 function authenticate($db, $username) {
 
-    $db->query("START TRANSACTION;");
-
     //se o colaborador nao existir, termina o processo de autenticacao
     if (is_colaborador($db, $username)) {
 
@@ -68,10 +66,8 @@ function authenticate($db, $username) {
 
     else  {
 
-        exit("Não foi possível autenticá-lo. Verifique que está registado.");
+        exit ("Não foi possível autenticá-lo. Verifique que está registado.");
     }
-
-    $db->query("COMMIT;");
 }
 
 
@@ -81,11 +77,10 @@ function authenticate($db, $username) {
 // retorno: booleano que indica se o colaborador existe
 function is_colaborador($db, $username) {
 
-    $query = "SELECT EXISTS (
-                             SELECT * 
+    $query = "SELECT EXISTS (SELECT * 
                              FROM colaborador 
-                             WHERE username = :username
-                            ) AS existe;";
+                             WHERE username = :username) 
+                             AS existe;";
 
     $parameters = array(':username' => $username);
     
@@ -103,12 +98,11 @@ function is_colaborador($db, $username) {
 // retorno: booleano que indica se o colaborador e' CEO
 function is_ceo($db, $username) {
 
-    $query = "SELECT EXISTS (
-                                       SELECT *
-                                       FROM administrador
-                                       WHERE username = :username
-                                       AND funcao = 'CEO'
-                                      ) AS existe;";
+    $query = "SELECT EXISTS (SELECT *
+                             FROM administrador
+                             WHERE username = :username
+                             AND funcao = 'CEO') 
+                             AS existe;";
 
     $parameters = array(':username' => $username);
     
@@ -125,12 +119,11 @@ function is_ceo($db, $username) {
 // retorno: booleano que indica se o colaborador e' financeiro
 function is_financeiro($db, $username) {
 
-    $query = "SELECT EXISTS (
-                             SELECT *
+    $query = "SELECT EXISTS (SELECT *
                              FROM administrador
                              WHERE username = :username
-                             AND funcao = 'financeiro'
-                            ) AS existe;";
+                             AND funcao = 'financeiro') 
+                             AS existe;";
 
     $parameters = array(':username' => $username);
     
@@ -148,11 +141,10 @@ function is_financeiro($db, $username) {
 // retorno: booleano que indica se o colaborador e' diretor de unidade
 function is_diretor($db, $username) {
 
-    $query = "SELECT EXISTS (
-                                        SELECT * 
-                                        FROM unidade 
-                                        WHERE diretor = :username
-                                      ) AS existe;";
+    $query = "SELECT EXISTS (SELECT * 
+                             FROM unidade 
+                             WHERE diretor = :username) 
+                             AS existe;";
     
     $parameters = array(':username' => $username);
     
@@ -170,11 +162,10 @@ function is_diretor($db, $username) {
 // retorno: booleano que indica se o colaborador e' coordenador de equipa
 function is_coordenador($db, $username) {
 
-    $query = "SELECT EXISTS (
-                                        SELECT * 
-                                        FROM supervisiona 
-                                        WHERE supervisor = :username
-                                      ) AS existe;";
+    $query = "SELECT EXISTS (SELECT * 
+                             FROM supervisiona 
+                             WHERE supervisor = :username) 
+                             AS existe;";
     
 
     $parameters = array(':username' => $username);
@@ -204,8 +195,9 @@ function execute($db, $query, $parameters = array()) {
     }
     
     catch (PDOException $e) {
+        
         $db->query("ROLLBACK;");
-        echo ($e->getMessage());
+        exit ($e->getMessage());
     }
 }
 
@@ -218,19 +210,29 @@ function execute($db, $query, $parameters = array()) {
 // retorno: array: superiores hierarquicos do utilizador dado
 function determinaSuperiores($db, $username, $hierarquia) {
 
-    $db->query("START TRANSACTION");
+    if ($hierarquia == COLABORADOR) {
 
-    $superiores = determinaCoordenadores($db, $username);
+        $superiores = determinaCoordenadores($db, $username);
 
-    //se não houver supervisores, consideram-se os diretores das areas a que pertence
-    if (!empty($superiores)) {
+        //se não houver supervisores, consideram-se os diretores das areas a que pertence
+        if (!empty($superiores)) {
 
-        return $superiores;
+            return $superiores;
+        }
+
+         $superiores = determinaDiretores($db, $username);
     }
 
-    $superiores = determinaDiretores($db, $username);
+    //se for um coordenador, pode enviar diretamente para os diretores
+    else if ($hierarquia == COORDENADOR) {
 
-    $db->query("COMMIT;");
+        $superiores = determinaDiretores($db, $username);
+    }
+
+    else if ($hierarquia == DIRETOR) {
+
+        $superiores = getAdmins($db);
+    }
 
     return $superiores;
 }
@@ -265,7 +267,7 @@ function determinaDiretores($db, $username) {
     $query = "SELECT diretor
               FROM pertence P INNER JOIN unidade U
               ON unidade = nome
-              WHERE colaborador = :username";
+              WHERE colaborador = :username;";
 
     $parameters = array(':username' => $username);
 
@@ -277,38 +279,151 @@ function determinaDiretores($db, $username) {
 }
 
 
+function getAdmins($db) {
+
+    $query = "SELECT username
+              FROM administrador;";
+
+    $result = execute($db, $query);
+
+    $admins = $result->fetchAll(PDO::FETCH_COLUMN);
+
+    return $admins;
+
+}
+
 // submeteRequerimento
 // submete um requerimento de ausencia na base de dados
 // argumentos: $db: PDO para a base de dados usada
 //             $username: utilizador para o qual determinar superiores
 //             $tipo: ausencia ou ferias
 //             $datas: array com data de inicio e fim, em formato YYYY-MM-DD HH:ss
-//             $autorizacoes: numero de autorizacoes requeridas pelo nivel hierarquico seguinte
-//             $
-function submeteRequerimento($db, $username, $tipo, $datas, $autorizacoes, $motivo) {
-
-    $db->query("START TRANSACTION;");
+//             $destinatarios: destinatarios do requerimento
+//             $motivo: motivo a que se deve o requerimento
+function submeteRequerimento($db, $username, $tipo, $datas, $destinatarios, $motivo) {
 
     $id = uniqid($username);
 
-    $query = "INSERT INTO requerimento(id, colaborador, inicio, fim, autorizacoes, estado, observacoes)
-              VALUES (:id, :username, :inicio, :fim, :contador, :estado, :observacoes);";
+    //submete requerimento
+    $query = "INSERT INTO requerimento(id, colaborador, inicio, fim, estado, observacoes)
+              VALUES (:id, :username, :inicio, :fim, 'PENDENTE', :observacoes);";
 
-    $parameters = array(':id' => $id,':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':contador' => $autorizacoes, ':estado' => "PENDENTE", ':observacoes' => $motivo);
+    $parameters = array(':id' => $id,':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':observacoes' => $motivo);
 
     execute($db, $query, $parameters);
 
+    //submete tambem na tabela respetiva
     if ($tipo === "ausencia") {
 
         $query = "INSERT INTO requerimento_ausencia(id)
                   VALUES (:id);";
 
+    }
+
+    else if ($tipo === "ferias") {
+
+         $query = "INSERT INTO requerimento_ferias(id)
+                   VALUES (:id);";
+    }
+
+    $parameters = array(':id' => $id);
+
+    execute($db, $query, $parameters);
+
+    registaDestinatarios($db, $id, $username, $destinatarios);
+}
+
+
+function registaDestinatarios($db, $id, $username, $destinatarios) {
+
+    foreach($destinatarios as $destinatario) {
+
+        $query = "INSERT INTO destinatario(id, username)
+                  VALUES (:id, :username);";
+
+        $parameters = array(':id' => $id, ':username' => $destinatario);
+
+        execute($db, $query, $parameters);
+    }
+}
+
+
+function consultaRequerimentos($db, $username, $hierarquia) {
+
+    $query = "SELECT *
+              FROM requerimento R INNER JOIN destinatario D
+              ON R.id = D.id
+              WHERE D.username = :username";
+
+    $parameters = array(':username' => $username);
+
+    $requerimentos = execute($db, $query, $parameters);
+
+    return $requerimentos;
+}
+
+
+function nivelAprovado($db, $id) {
+
+    $query = "SELECT COUNT(*)
+              FROM destinatario
+              WHERE id = :id;";
+
+    $parameters = array(':id' => $id);
+
+    $result = execute($db, $query, $parameters);
+
+    return $result->fetchColumn() == 0;
+}
+
+
+function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
+
+    $query = "DELETE FROM destinatario
+              WHERE id = :id
+              AND username = :username;";
+
+    $parameters = array(':id' => $id, ':username' => $username);
+
+    execute($db, $query, $parameters);
+
+    if ($decisao === "aprovado") {
+
+        if ($hierarquia == CEO) {
+
+            $query = "UPDATE requerimento
+                      SET estado = 'APROVADO'
+                      WHERE id = :id;";
+
+            $parameters = array(':id' => $id);
+
+            execute($db, $query, $parameters);
+        }
+
+        else if (nivelAprovado($db, $query, $id)) {
+
+            escalonaRequerimento($db, $username, $id, $hierarquia);
+        }
+    }
+
+    else {
+
+        $query = "UPDATE requerimento
+                  SET estado = 'REJEITADO'
+                  WHERE id = :id;";
+
         $parameters = array(':id' => $id);
 
         execute($db, $query, $parameters);
     }
+}
 
-    $db->query("COMMIT;");
+
+function escalonaRequerimento($db, $username, $id, $hierarquia) {
+
+    $superiores = determinaSuperiores($db, $username, $hierarquia);
+
+    registaDestinatarios($db, $id, $username, $superiores);
 }
 
 

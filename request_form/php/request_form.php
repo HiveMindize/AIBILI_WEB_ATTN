@@ -14,17 +14,15 @@
     <body>
 
         <?php
-            require 'lib.php';  
-            require 'setup.php';
+            require_once 'lib.php';  
+            require_once 'setup.php';
 
-            include 'header.php';
+            include_once 'header.php';
 
             if ($hierarquia == COLABORADOR || $hierarquia == COORDENADOR) {
                 
                 $superiores = determinaSuperiores($db, $username, $hierarquia);
             }
-
-            $autorizacoes = count($superiores);
 
             $tipo = $datas = $motivo = "";
 
@@ -34,7 +32,7 @@
                 $datas = explode(" - ", testInput($_POST["datas"]));
                 $motivo = testInput($_POST["motivo"]);
 
-                submeteRequerimento($db, $username, $tipo, $datas, $autorizacoes, $motivo);
+                submeteRequerimento($db, $username, $tipo, $datas, $superiores, $motivo);
             }
         ?>
         
@@ -60,11 +58,16 @@
         </form>
         
         <?php
-            echo("Tipo: $tipo<br />
-                  Início: $datas[0]<br />
-                  Fim: $datas[1]<br />
-                  Autorizações necessárias: $autorizacoes<br />
-                  Motivo: $motivo<br />");
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                print_r($superiores);
+
+                echo("Tipo: $tipo<br />
+                      Início: $datas[0]<br />
+                      Fim: $datas[1]<br />
+                      Motivo: $motivo<br />");
+            }
         ?>
     </body>
 </html> 

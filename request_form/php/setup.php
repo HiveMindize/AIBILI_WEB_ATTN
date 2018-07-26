@@ -6,7 +6,7 @@
     $user = "root";
     $password = "";
 
-    $username = "dfcoimbra";
+    $username = "hive";
 
     date_default_timezone_set("Europe/Lisbon");
 
