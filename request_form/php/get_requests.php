@@ -24,16 +24,19 @@
 
             $db->query("COMMIT;");
 
-            if (isset($_GET['id']) && isset($_GET['decisao'])) {
-            
-                $id = testInput($_GET['id']);
-                $decisao = testInput($_GET['decisao']);
+            if ($hierarquia != COORDENADOR) {
 
-                $db->query("START TRANSACTION;");
+                if (isset($_GET['id']) && isset($_GET['decisao'])) {
+                
+                    $id = testInput($_GET['id']);
+                    $decisao = testInput($_GET['decisao']);
 
-                avaliaRequerimento($db, $decisao, $username, $hierarquia, $id);
+                    $db->query("START TRANSACTION;");
 
-                $db->query("COMMIT;");
+                    avaliaRequerimento($db, $decisao, $username, $hierarquia, $id);
+
+                    $db->query("COMMIT;");
+                }
             }
         ?>
 
