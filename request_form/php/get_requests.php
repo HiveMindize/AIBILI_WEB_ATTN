@@ -44,7 +44,7 @@
 
         <?php
 
-            echo("<table style='width:50%'>
+            echo("<table style='width:75%'>
                     <tr>
                         <th>ID</th>
                         <th>Colaborador</th>

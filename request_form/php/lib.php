@@ -410,6 +410,9 @@ function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
 
         $query = "UPDATE requerimento
                   SET estado = 'REJEITADO'
+                  WHERE id = :id;
+
+                  DELETE FROM destinatario
                   WHERE id = :id;";
 
         $parameters = array(':id' => $id);
