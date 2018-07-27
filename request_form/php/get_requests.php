@@ -24,7 +24,7 @@
 
             $db->query("COMMIT;");
 
-            if ($hierarquia != COORDENADOR) {
+            if ($hierarquia != COLABORADOR) {
 
                 if (isset($_GET['id']) && isset($_GET['decisao'])) {
                 

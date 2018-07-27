@@ -4,7 +4,7 @@ Um colaborador pode ser administrador, que é caraterizado pela sua função (CE
 Um colaborador pode pertencer a uma ou várias equipas (ou nenhuma), tendo nesse caso um supervisor para cada equipa.  
 
 Uma unidade é identificada pelo seu nome.  
-Um colaborador pertence a uma ou mais unidadew. Uma unidade tem pelo menos um colaborador.  
+Um colaborador pertence a uma ou mais unidades. Uma unidade tem pelo menos um colaborador.  
 Uma unidade tem sempre um único diretor de cada vez (podem delegar). Um diretor pode apenas dirigir uma unidade de cada vez.  
 
 Um projeto é identificado pelo seu nome.  
@@ -54,13 +54,14 @@ PK: username
 
 administrador(username, função)
 PK: username
+username: FK(colaborador)
 
 atividade(id, colaborador, descricao, inicio, duracao)
 PK: id 
 colaborador: FK(colaborador.username)
 
-projeto(descricao)
-PK: descricao
+projeto(nome)
+PK: nome
 
 associada(projeto, atividade)
 PK: (projeto, atividade)
@@ -81,18 +82,18 @@ PK: (colaborador, unidade)
 colaborador: FK(colaborador.username)
 unidade: FK(unidade.nome)
 
-diretor(colaborador, unidade)
-PK: (colaborador, unidade)
-colaborador: FK(colaborador.username)
-unidade: FK(unidade.nome)
-
-requerimento(id, colaborador, inicio, fim, contador, estado, observacoes)
+requerimento(id, colaborador, inicio, fim, estado, observacoes)
 PK: id
 colaborador: FK(colaborador.username)
 
-requerimento_ausencia(id, categoria, url_doc)
+requerimento_ausencia(id, url_doc)
 PK: id
 id: FK(requerimento.id)
+
+destinatario(id, username)
+PK: (id, username)
+id: FK(requerimento)
+username: FK(colaborador)
 ```
 
 ## Autenticação integrada com AD - tabelas adicionais:

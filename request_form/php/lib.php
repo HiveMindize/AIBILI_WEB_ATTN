@@ -353,7 +353,7 @@ function consultaRequerimentos($db, $username, $hierarquia) {
     $query = "SELECT *
               FROM requerimento R INNER JOIN destinatario D
               ON R.id = D.id
-              WHERE D.username = :username";
+              WHERE D.username = :username;";
 
     $parameters = array(':username' => $username);
 
