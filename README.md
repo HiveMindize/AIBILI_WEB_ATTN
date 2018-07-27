@@ -1,3 +1,5 @@
+FOR THE CALENDAR: https://fullcalendar.io/
+
 # Descrição do domínio
 Um colaborador é identificado pelo seu nome de utilizador e caraterizado pelo seu nome completo.  
 Um colaborador pode ser administrador, que é caraterizado pela sua função (CEO ou financeiro).  
