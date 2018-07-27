@@ -38,22 +38,22 @@ function authenticate($db, $username) {
     //se o colaborador nao existir, termina o processo de autenticacao
     if (is_colaborador($db, $username)) {
 
-        if (is_ceo($db, $username) == 1) {
+        if (is_ceo($db, $username)) {
 
             return CEO; 
         }
 
-        else if (is_financeiro($db, $username) == 1) {
+        else if (is_financeiro($db, $username)) {
 
             return FINANCEIRO; 
         }
 
-        else if (is_diretor($db, $username) == 1) {
+        else if (is_diretor($db, $username)) {
 
             return DIRETOR;
         }
 
-        else if (is_coordenador($db, $username) == 1) {
+        else if (is_coordenador($db, $username)) {
 
             return COORDENADOR;
         }
@@ -292,6 +292,7 @@ function getAdmins($db) {
 
 }
 
+
 // submeteRequerimento
 // submete um requerimento de ausencia na base de dados
 // argumentos: $db: PDO para a base de dados usada
@@ -338,7 +339,7 @@ function registaDestinatarios($db, $id, $username, $destinatarios) {
 
     foreach($destinatarios as $destinatario) {
 
-        $query = "INSERT INTO destinatario(id, username)
+        $query = "INSERT INTO aprovacoes_necessarias(id, username)
                   VALUES (:id, :username);";
 
         $parameters = array(':id' => $id, ':username' => $destinatario);
@@ -351,9 +352,9 @@ function registaDestinatarios($db, $id, $username, $destinatarios) {
 function consultaRequerimentos($db, $username, $hierarquia) {
 
     $query = "SELECT *
-              FROM requerimento R INNER JOIN destinatario D
-              ON R.id = D.id
-              WHERE D.username = :username;";
+              FROM requerimento R INNER JOIN aprovacoes_necessarias A
+              ON R.id = A.id
+              WHERE A.username = :username";
 
     $parameters = array(':username' => $username);
 
@@ -366,7 +367,7 @@ function consultaRequerimentos($db, $username, $hierarquia) {
 function nivelAprovado($db, $id) {
 
     $query = "SELECT COUNT(*)
-              FROM destinatario
+              FROM aprovacoes_necessarias
               WHERE id = :id;";
 
     $parameters = array(':id' => $id);
@@ -379,11 +380,22 @@ function nivelAprovado($db, $id) {
 
 function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
 
-    $query = "DELETE FROM destinatario
-              WHERE id = :id
-              AND username = :username;";
+    if ($hierarquia == CEO) {
 
-    $parameters = array(':id' => $id, ':username' => $username);
+        $query = "DELETE FROM aprovacoes_necessarias
+                  WHERE id = :id;";
+
+        $parameters = array(':id' => $id);
+    }
+
+    else {
+
+        $query = "DELETE FROM aprovacoes_necessarias
+                  WHERE id = :id
+                  AND username = :username;";
+
+        $parameters = array(':id' => $id, ':username' => $username);
+    }
 
     execute($db, $query, $parameters);
 
@@ -412,7 +424,7 @@ function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
                   SET estado = 'REJEITADO'
                   WHERE id = :id;
 
-                  DELETE FROM destinatario
+                  DELETE FROM aprovacoes_necessarias
                   WHERE id = :id;";
 
         $parameters = array(':id' => $id);
@@ -428,6 +440,153 @@ function escalonaRequerimento($db, $username, $id, $hierarquia) {
 
     registaDestinatarios($db, $id, $username, $superiores);
 }
+
+
+function requerimentosColaborador($db, $username) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento
+              WHERE colaborador = :username 
+              estado = 'APROVADO';";
+
+    $parameters = array(':username' => $username);
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function requerimentosEquipas($db, $coordenador) {
+
+    if (!is_coordenador($db, $coordenador)) {
+
+        exit ("Não coordena equipas.");
+    }
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN supervisiona S
+              ON R.colaborador = S.colaborador
+              WHERE S.supervisor = :username
+              AND estado = 'APROVADO';";
+
+    $parameters = array(':username' => $coordenador);
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function requerimentosUnidade($db, $unidade) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN pertence P
+              ON R.colaborador = P.colaborador
+              WHERE P.unidade = :unidade
+              AND estado = 'APROVADO';";
+
+    $parameters = array(':unidade' => $unidade);
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function requerimentosOrganizacao($db) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento;";
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function mapaFeriasColaborador($db, $username) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN requerimento_ferias F
+              ON R.id = F.id
+              WHERE colaborador = :username 
+              estado = 'APROVADO';";
+
+    $parameters = array(':username' => $username);
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function mapaFeriasEquipas($db, $coordenador) {
+
+    if (!is_coordenador($db, $coordenador)) {
+
+        exit ("Não coordena equipas.");
+    }
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN requerimento_ferias F INNER JOIN supervisiona S
+              ON R.colaborador = S.colaborador
+              AND R.id = F.id
+              WHERE S.supervisor = :username
+              AND estado = 'APROVADO';";
+
+    $parameters = array(':username' => $coordenador);
+
+     $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function mapaFeriasUnidade($db, $unidade) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN requerimento_ferias F INNER JOIN pertence P
+              ON R.colaborador = P.colaborador
+              AND R.id = F.id
+              WHERE P.unidade = :unidade
+              AND estado = 'APROVADO';";
+
+    $parameters = array(':unidade' => $unidade);
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
+function mapaFeriasOrganizacao($db) {
+
+    $query = "SELECT colaborador, inicio, fim
+              FROM requerimento R INNER JOIN requerimento_ferias F
+              ON R.id = F.id;";
+
+    $result = execute($db, $query, $parameters);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
 
 
 //testInput

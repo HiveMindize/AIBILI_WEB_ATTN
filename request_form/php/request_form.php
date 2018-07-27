@@ -12,7 +12,6 @@
     </head>
     
     <body>
-
         <?php
             require_once 'lib.php';  
             require_once 'setup.php';
@@ -56,18 +55,5 @@
             <br />
             <input type="submit">
         </form>
-        
-        <?php
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-                print_r($superiores);
-
-                echo("Tipo: $tipo<br />
-                      Início: $datas[0]<br />
-                      Fim: $datas[1]<br />
-                      Motivo: $motivo<br />");
-            }
-        ?>
     </body>
 </html> 

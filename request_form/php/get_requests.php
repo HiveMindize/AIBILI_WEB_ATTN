@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
     <head>
-        <title>Pedido de dispensa</title>
+        <title>Requerimentos pendentes</title>
         <meta charset="UTF-8">
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
@@ -24,7 +24,7 @@
 
             $db->query("COMMIT;");
 
-            if ($hierarquia != COLABORADOR) {
+            if ($hierarquia != COLABORADOR && $hierarquia != FINANCEIRO) {
 
                 if (isset($_GET['id']) && isset($_GET['decisao'])) {
                 
@@ -36,6 +36,8 @@
                     avaliaRequerimento($db, $decisao, $username, $hierarquia, $id);
 
                     $db->query("COMMIT;");
+
+                    header('Location: get_requests.php');
                 }
             }
         ?>
@@ -43,7 +45,6 @@
         <h3>Requerimentos</h3>
 
         <?php
-
             echo("<table style='width:75%'>
                     <tr>
                         <th>ID</th>
@@ -62,13 +63,18 @@
                         <td>{$row['inicio']}</td>
                         <td>{$row['fim']}</td>
                         <td>{$row['estado']}</td>
-                        <td>{$row['observacoes']}</td>
-                        <td><a href=\"get_requests.php?id={$row['id']}&decisao=aprovado\">Aprovar</a>
-                            <br />
-                            <a href=\"get_requests.php?id={$row['id']}&decisao=rejeitado\">Rejeitar</a></td>
-                      </tr>");
-            }
-        ?>
+                        <td>{$row['observacoes']}</td>");
 
-        </table>
+                if ($hierarquia != COLABORADOR && $hierarquia != FINANCEIRO) {
+
+                    echo("<td><a href=\"get_requests.php?id={$row['id']}&decisao=aprovado\">Aprovar</a>
+                            <br />
+                            <a href=\"get_requests.php?id={$row['id']}&decisao=rejeitado\">Rejeitar</a></td>");
+                }
+
+                echo("</tr>");
+            }
+
+            echo("</table>");
+        ?>
     </body> 
