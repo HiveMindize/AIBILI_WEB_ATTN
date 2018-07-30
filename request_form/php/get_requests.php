@@ -3,12 +3,6 @@
     <head>
         <title>Requerimentos pendentes</title>
         <meta charset="UTF-8">
-
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <script type="text/javascript" src="../js/datepicker.js"></script>
     </head>
 
     <body>
@@ -40,11 +34,9 @@
                     header('Location: get_requests.php');
                 }
             }
-        ?>
 
-        <h3>Requerimentos</h3>
+            echo("<h3>Requerimentos</h3>");
 
-        <?php
             echo("<table style='width:75%'>
                     <tr>
                         <th>ID</th>
@@ -77,4 +69,5 @@
 
             echo("</table>");
         ?>
-    </body> 
+    </body>
+</html>

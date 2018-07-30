@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment-with-locales.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="../js/datepicker.js"></script>
@@ -18,20 +18,20 @@
 
             include_once 'header.php';
 
-            if ($hierarquia == COLABORADOR || $hierarquia == COORDENADOR) {
+            if ($hierarquia != CEO || $hierarquia != FINANCEIRO) {
                 
                 $superiores = determinaSuperiores($db, $username, $hierarquia);
-            }
 
-            $tipo = $datas = $motivo = "";
+                $tipo = $datas = $motivo = "";
 
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                $tipo = testInput($_POST["tipo"]);
-                $datas = explode(" - ", testInput($_POST["datas"]));
-                $motivo = testInput($_POST["motivo"]);
+                    $tipo = testInput($_POST["tipo"]);
+                    $datas = explode(" - ", testInput($_POST["datas"]));
+                    $motivo = testInput($_POST["motivo"]);
 
-                submeteRequerimento($db, $username, $tipo, $datas, $superiores, $motivo);
+                    submeteRequerimento($db, $username, $tipo, $datas, $superiores, $motivo, $hierarquia);
+                }
             }
         ?>
         

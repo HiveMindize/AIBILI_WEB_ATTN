@@ -1,9 +1,9 @@
 <?php
-define("CEO", 0);
-define("FINANCEIRO", 1);
+define("CEO", 4);
+define("FINANCEIRO", 3);
 define("DIRETOR", 2);
-define("COORDENADOR", 3);
-define("COLABORADOR", 4);
+define("COORDENADOR", 1);
+define("COLABORADOR", 0);
 
 // connect
 // argumentos: $dbtype: tipo de base de dados: MySQL, PostgreSQL, etc.
@@ -301,15 +301,15 @@ function getAdmins($db) {
 //             $datas: array com data de inicio e fim, em formato YYYY-MM-DD HH:ss
 //             $destinatarios: destinatarios do requerimento
 //             $motivo: motivo a que se deve o requerimento
-function submeteRequerimento($db, $username, $tipo, $datas, $destinatarios, $motivo) {
+function submeteRequerimento($db, $username, $tipo, $datas, $destinatarios, $motivo, $hierarquia) {
 
     $id = uniqid($username);
 
     //submete requerimento
-    $query = "INSERT INTO requerimento(id, colaborador, inicio, fim, estado, observacoes)
-              VALUES (:id, :username, :inicio, :fim, 'PENDENTE', :observacoes);";
+    $query = "INSERT INTO requerimento(id, nivel, colaborador, inicio, fim, estado, observacoes)
+              VALUES (:id, :nivel, :username, :inicio, :fim, 'PENDENTE', :observacoes);";
 
-    $parameters = array(':id' => $id,':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':observacoes' => $motivo);
+    $parameters = array(':id' => $id, ':nivel' => $hierarquia, ':username' => $username, ':inicio' => $datas[0], ':fim' => $datas[1], ':observacoes' => $motivo);
 
     execute($db, $query, $parameters);
 
@@ -354,9 +354,10 @@ function consultaRequerimentos($db, $username, $hierarquia) {
     $query = "SELECT *
               FROM requerimento R INNER JOIN aprovacoes_necessarias A
               ON R.id = A.id
-              WHERE A.username = :username";
+              WHERE A.username = :username
+              AND R.nivel < :hierarquia;";
 
-    $parameters = array(':username' => $username);
+    $parameters = array(':username' => $username, ':hierarquia' => $hierarquia);
 
     $requerimentos = execute($db, $query, $parameters);
 
@@ -401,6 +402,10 @@ function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
 
     if ($decisao === "aprovado") {
 
+        $superiores = determinaSuperiores($db, $username, $hierarquia);
+
+        registaDestinatarios($db, $id, $username, $superiores);
+
         if ($hierarquia == CEO) {
 
             $query = "UPDATE requerimento
@@ -436,18 +441,22 @@ function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
 
 function escalonaRequerimento($db, $username, $id, $hierarquia) {
 
-    $superiores = determinaSuperiores($db, $username, $hierarquia);
+    $query = "UPDATE requerimento
+              SET nivel = :hierarquia
+              WHERE id = :id;";
 
-    registaDestinatarios($db, $id, $username, $superiores);
+    $parameters = array(':hierarquia' => $hierarquia, ':id' => $id);
+
+    execute($db, $query, $parameters);
 }
 
 
-function requerimentosColaborador($db, $username) {
+function requerimentosAprovadosColaborador($db, $username) {
 
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento
               WHERE colaborador = :username 
-              estado = 'APROVADO';";
+              AND estado = 'APROVADO';";
 
     $parameters = array(':username' => $username);
 
@@ -459,7 +468,7 @@ function requerimentosColaborador($db, $username) {
 }
 
 
-function requerimentosEquipas($db, $coordenador) {
+function requerimentosAprovadosEquipas($db, $coordenador) {
 
     if (!is_coordenador($db, $coordenador)) {
 
@@ -482,7 +491,7 @@ function requerimentosEquipas($db, $coordenador) {
 }
 
 
-function requerimentosUnidade($db, $unidade) {
+function requerimentosAprovadosUnidade($db, $unidade) {
 
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento R INNER JOIN pertence P
@@ -500,7 +509,7 @@ function requerimentosUnidade($db, $unidade) {
 }
 
 
-function requerimentosOrganizacao($db) {
+function requerimentosAprovadosOrganizacao($db) {
 
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento;";
@@ -578,9 +587,10 @@ function mapaFeriasOrganizacao($db) {
 
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento R INNER JOIN requerimento_ferias F
-              ON R.id = F.id;";
+              ON R.id = F.id
+              WHERE estado = 'APROVADO';";
 
-    $result = execute($db, $query, $parameters);
+    $result = execute($db, $query);
 
     $mapa = $result->fetchAll();
 

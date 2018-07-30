@@ -70,13 +70,13 @@ CREATE TABLE `requerimento_ferias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 
-CREATE TABLE `destinatario` (
+CREATE TABLE `aprovacoes_necessarias` (
  `id` varchar(64) NOT NULL,
  `username` varchar(64) NOT NULL,
  PRIMARY KEY (`id`,`username`),
- KEY `destinatario_username_colaborador` (`username`),
- CONSTRAINT `destinatario_id_requerimento` FOREIGN KEY (`id`) REFERENCES `requerimento` (`id`),
- CONSTRAINT `destinatario_username_colaborador` FOREIGN KEY (`username`) REFERENCES `colaborador` (`username`)
+ KEY `fk_aprovacoes_username` (`username`),
+ CONSTRAINT `fk_aprovacoes_id` FOREIGN KEY (`id`) REFERENCES `requerimento` (`id`),
+ CONSTRAINT `fk_aprovacoes_username` FOREIGN KEY (`username`) REFERENCES `colaborador` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 
 
