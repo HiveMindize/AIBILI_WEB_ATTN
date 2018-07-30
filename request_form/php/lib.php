@@ -365,11 +365,13 @@ function consultaRequerimentos($db, $username, $hierarquia) {
 }
 
 
-function nivelAprovado($db, $id) {
+function nivelAprovado($db, $id, $hierarquia) {
 
     $query = "SELECT COUNT(*)
-              FROM aprovacoes_necessarias
-              WHERE id = :id;";
+              FROM aprovacoes_necessarias A INNER JOIN requerimento R
+              ON A.id = R.id 
+              WHERE A.id = :id
+              AND R.nivel = :hierarquia;";
 
     $parameters = array(':id' => $id);
 
@@ -417,7 +419,7 @@ function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
             execute($db, $query, $parameters);
         }
 
-        else if (nivelAprovado($db, $query, $id)) {
+        else if (nivelAprovado($db, $id, $hierarquia)) {
 
             escalonaRequerimento($db, $username, $id, $hierarquia);
         }
