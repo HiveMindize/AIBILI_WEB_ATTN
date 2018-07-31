@@ -28,6 +28,33 @@ function connect($dbtype, $host, $port, $dbname, $user, $password) {
     }
 }
 
+function uploadFiles($id) {
+        
+    // Count # of uploaded files in array
+    $total = count($_FILES['upload']['name']);
+
+    mkdir("../docs/$id/");
+
+    // Loop through each file
+    for($i = 0; $i < $total; $i++) {
+
+        // Get the temp file path
+        $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+
+        // Make sure we have a file path
+
+        if ($tmpFilePath != "") {
+        
+            // Setup our new file path
+            $newFilePath = "../docs/$id/" . $_FILES['upload']['name'][$i];
+
+            // Upload the file into the temp dir
+            move_uploaded_file($tmpFilePath, $newFilePath);
+        }
+    }
+
+    return $_SERVER['DOCUMENT_ROOT'] . "/docs/$id/";
+}
 
 // authenticate
 // argumentos: $db: PDO para a base de dados usada
@@ -301,7 +328,9 @@ function getAdmins($db) {
 //             $datas: array com data de inicio e fim, em formato YYYY-MM-DD HH:ss
 //             $destinatarios: destinatarios do requerimento
 //             $motivo: motivo a que se deve o requerimento
-function submeteRequerimento($db, $id, $nivel, $username, $tipo, $datas, $destinatarios, $motivo, $filepath = null) {
+function submeteRequerimento($db, $nivel, $username, $tipo, $datas, $destinatarios, $motivo) {
+
+    $id = uniqid($username); 
 
     //submete requerimento
     $query = "INSERT INTO requerimento(id, nivel, colaborador, inicio, fim, estado, observacoes)
@@ -312,12 +341,14 @@ function submeteRequerimento($db, $id, $nivel, $username, $tipo, $datas, $destin
     execute($db, $query, $parameters);
 
     //submete tambem na tabela respetiva
-    if ($tipo === "ausencia") { 
+    if ($tipo === "ausencia") {
+
+        $path = uploadFiles($id);
 
         $query = "INSERT INTO requerimento_ausencia(id, url_doc)
                   VALUES (:id, :doc_url);";
 
-        $parameters = array(':id' => $id, ':doc_url' => $filepath);
+        $parameters = array(':id' => $id, ':doc_url' => $path);
     }
 
     else if ($tipo === "ferias") {
@@ -348,7 +379,7 @@ function registaDestinatarios($db, $id, $username, $destinatarios) {
 }
 
 
-function consultaRequerimentos($db, $username, $hierarquia) {
+function requerimentosPendentes($db, $username, $hierarquia) {
 
     $query = "SELECT *
               FROM requerimento R INNER JOIN aprovacoes_necessarias A
@@ -467,24 +498,23 @@ function escalonaRequerimento($db, $username, $id, $hierarquia) {
 }
 
 
-function requerimentosAprovadosColaborador($db, $username) {
+function requerimentosColaborador($db, $username) {
 
-    $query = "SELECT colaborador, inicio, fim
+    $query = "SELECT id, inicio, fim, estado, observacoes
               FROM requerimento
-              WHERE colaborador = :username 
-              AND estado = 'APROVADO';";
+              WHERE colaborador = :username;";
 
     $parameters = array(':username' => $username);
 
     $result = execute($db, $query, $parameters);
 
-    $mapa = $result->fetchAll();
+    $requerimentos = $result->fetchAll();
 
-    return $mapa;
+    return $requerimentos;
 }
 
 
-function requerimentosAprovadosEquipas($db, $coordenador) {
+function requerimentosEquipas($db, $coordenador) {
 
     if (!is_coordenador($db, $coordenador)) {
 
@@ -494,48 +524,45 @@ function requerimentosAprovadosEquipas($db, $coordenador) {
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento R INNER JOIN supervisiona S
               ON R.colaborador = S.colaborador
-              WHERE S.supervisor = :username
-              AND estado = 'APROVADO';";
+              WHERE S.supervisor = :username";
 
     $parameters = array(':username' => $coordenador);
 
     $result = execute($db, $query, $parameters);
 
-    $mapa = $result->fetchAll();
+    $requerimentos = $result->fetchAll();
 
-    return $mapa;
+    return $requerimentos;
 }
 
 
-function requerimentosAprovadosUnidade($db, $unidade) {
+function requerimentosUnidade($db, $unidade) {
 
     $query = "SELECT colaborador, inicio, fim
               FROM requerimento R INNER JOIN pertence P
               ON R.colaborador = P.colaborador
-              WHERE P.unidade = :unidade
-              AND estado = 'APROVADO';";
+              WHERE P.unidade = :unidade;";
 
     $parameters = array(':unidade' => $unidade);
 
     $result = execute($db, $query, $parameters);
 
-    $mapa = $result->fetchAll();
+    $requerimentos = $result->fetchAll();
 
-    return $mapa;
+    return $requerimentos;
 }
 
 
-function requerimentosAprovadosOrganizacao($db) {
+function requerimentosOrganizacao($db) {
 
     $query = "SELECT colaborador, inicio, fim
-              FROM requerimento
-              WHERE estado = 'APROVADO;";
+              FROM requerimento;";
 
     $result = execute($db, $query, $parameters);
 
-    $mapa = $result->fetchAll();
+    $requerimentos = $result->fetchAll();
 
-    return $mapa;
+    return $requerimentos;
 }
 
 
