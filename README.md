@@ -1,4 +1,7 @@
-FOR THE CALENDAR: https://fullcalendar.io/
+# Plugins third-party utilizados:
+[Date Range Picker](http://www.daterangepicker.com/) por Dan Grossman, MIT License
+[FullCalendar](https://fullcalendar.io/) por Adam Shaw, MIT License
+[date-holidays](https://github.com/commenthol/date-holidays) por commenthol, ISC License
 
 # Descrição do domínio
 Um colaborador é identificado pelo seu nome de utilizador e caraterizado pelo seu nome completo.  
@@ -58,22 +61,10 @@ administrador(username, função)
 PK: username
 username: FK(colaborador)
 
-atividade(id, colaborador, descricao, inicio, duracao)
-PK: id 
+requerimento(id, nivel, colaborador, inicio, fim, estado, observacoes)
+PK: id
 colaborador: FK(colaborador.username)
 
-projeto(nome)
-PK: nome
-
-associada(projeto, atividade)
-PK: (projeto, atividade)
-projeto: FK(projeto.nome)
-atividade: FK(atividade.nome)
-
-colabora(colaborador, projeto)
-PK: (colaborador, projeto)
-colaborador: FK(colaborador.username)
-projeto: FK(projeto.descricao)
 
 unidade: (nome, diretor)
 PK: nome
@@ -84,18 +75,40 @@ PK: (colaborador, unidade)
 colaborador: FK(colaborador.username)
 unidade: FK(unidade.nome)
 
-requerimento(id, colaborador, inicio, fim, estado, observacoes)
-PK: id
+aprovacoes_necessarias(id, username)
+PK: (id, username)
+id: FK(requerimento)
+username: FK(colaborador)
+
+atividade(id, colaborador, descricao, inicio, duracao)
+PK: id 
 colaborador: FK(colaborador.username)
+
+projeto(nome)
+PK: nome
+
+associada(atividade, projeto)
+PK: (projeto, atividade)
+atividade: FK(atividade.nome)
+projeto: FK(projeto.nome)
+
+colabora(colaborador, projeto)
+PK: (colaborador, projeto)
+colaborador: FK(colaborador.username)
+projeto: FK(projeto.descricao)
 
 requerimento_ausencia(id, url_doc)
 PK: id
 id: FK(requerimento.id)
 
-destinatario(id, username)
-PK: (id, username)
-id: FK(requerimento)
-username: FK(colaborador)
+requerimento_ferias(id)
+PK: id
+id: FK(requerimento.id)
+
+supervisiona(colaborador, supervisor)
+PK: (colaborador, supervisor)
+colaborador: FK(colaborador.username)
+supervisor: FK(colaborador.username)
 ```
 
 ## Autenticação integrada com AD - tabelas adicionais:
@@ -112,23 +125,32 @@ Autenticação assegurada pelas tabelas:
 No início do processo, verificar o nome de utilizador e fazer as queries apropriadas.
 
 ## Configurações:
-Variável (global?) cujo valor muda consoante o nível hierárquico do colaborador. Gerir acesso a partir desse princípio.
+Variável cujo valor muda consoante o nível hierárquico do colaborador. Gerir acesso a partir desse princípio.
 
 ## Tabelas de feriados nacionais:
-Tabela extra na base de dados ou ficheiro de texto no servidor com uma entrada para cada feriado: dia e mês.
-Atualizar anualmente?
+Lista de feriados nacionais disponibilizada pelo serviço open-source [Yasumi](https://azuyalabs.github.io/yasumi/) por AzuyaLabs.
 
 ## Templates:
 Tabela extra na base de dados com designação da template, tempo que ocupa e periodicidade (semanal, mensal, etc).  
 Passível de se introduzir na agenda com a periodicidade pretendida.
 
 ## Dados de ausências / férias - codificação:
-Na base de dados, ausências pontuais e férias são guardadas em tabelas separadas. A decidir em front-end.
+Na base de dados, ausências pontuais e férias são guardadas em tabelas separadas.
 
 # Estrutura de pastas:
     -AIBILI_WEB_ATTN/
+        -docs
         -index.php
         -php/
+          -attendance_map.php
+          -header.php
+          -lib.php
+          -my_requests.php
+          -pending_requests.php
+          -request_form.php
+          -setup.php
         -js/
+          -calendar.js
+          -form.js
         -sql/
-        
+          -db.sql

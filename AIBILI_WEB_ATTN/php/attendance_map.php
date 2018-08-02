@@ -17,17 +17,26 @@
 
             include_once 'header.php';
 
+            require_once '../include/Yasumi/vendor/autoload.php';
+
             $db->query("START TRANSACTION;");
 
     		$ferias = json_encode(mapaFerias($db));
+            $ausencias = json_encode(mapaAusencias($db));
+
+            $holidays = Yasumi\Yasumi::create('Portugal', date("Y")); //recolhe feriados para o ano corrente
+
+            $dates = json_encode($holidays->getHolidays());
 
     		$db->query("COMMIT;");
     	?>
 
 		<script>
-    		var mapa = <?php echo $ferias ?>;
-    		
-    		showCalendar(mapa);
+    		var mapa_ferias = <?php echo($ferias) ?>;
+            var mapa_ausencias = <?php echo($ausencias) ?>;
+    		var holidays = <?php echo($dates) ?>;
+
+    		showCalendar(mapa_ferias, mapa_ausencias, holidays);
     	</script>
     </head>
 

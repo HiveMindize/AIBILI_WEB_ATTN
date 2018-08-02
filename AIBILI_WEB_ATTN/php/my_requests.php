@@ -69,7 +69,7 @@
 
             if (isset($requerimentos_organizacao)) {
 
-                echo("<h3>Requerimentos da minha unidade</h3>");
+                echo("<h3>Requerimentos da organização</h3>");
 
                 tabelaRequerimentos($requerimentos_organizacao);
             }
@@ -100,7 +100,6 @@
 
                 header('Location: my_requests.php');
             }
-
         ?>
     </body>
 </html>

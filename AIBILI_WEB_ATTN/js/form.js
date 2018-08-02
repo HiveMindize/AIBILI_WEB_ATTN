@@ -18,13 +18,13 @@ $(document).ready(function () {
     $('input[type="radio"]').click(function () {
         
         if ($(this).attr("value") === "ausencia") {
-            $("#upload").show();
-            $("#upload").attr("required") = true;
+            $("#uploaddiv").show();
+            $("#upload").attr("required", "");
         }
 
         if ($(this).attr("value") === "ferias") {
-            $("#upload").hide();
-            $("#upload").attr("required") = true;
+            $("#uploaddiv").hide();
+            $("#upload").removeAttr("required");
         }
     });
 });

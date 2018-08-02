@@ -25,7 +25,12 @@
                     $id = testInput($_GET['id']);
                     $decisao = testInput($_GET['decisao']);
 
+                    $db->query("START TRANSACTION;");
+
                     avaliaRequerimento($db, $decisao, $username, $hierarquia, $id);
+
+                    $db->query("COMMIT;");
+
 
                     header('Location: pending_requests.php');
                 }

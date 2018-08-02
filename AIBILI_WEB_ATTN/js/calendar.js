@@ -1,30 +1,67 @@
-function showCalendar(mapa) {
+// showCalendar
+// configura uma instância de FullCalendar com as ausências dadas
+// argumentos: mapa_ferias: array: requerimentos de ferias aprovados
+//             mapa_ausencias: array: requerimentos de ausencia aprovados
+function showCalendar(mapa_ferias, mapa_ausencias, holidays) {
 
-	var _events = [];
-	var _title, _start, _end;
-	    		
-	for (var i = 0; i < mapa.length; i++) {
+    var _events = [];
+    var _title, _start, _end;
 
-		_title = mapa[i].colaborador  + " férias";
-		_start = mapa[i].inicio;
-		_end = mapa[i].fim;
+    console.log(holidays);
+                
+    for (var i = 0; i < mapa_ferias.length; i++) {
 
-		_events.push({
-						title : _title, 
-	    				start : _start, 
-	    				end : _end
-	    			 });
-	}
+        pushEvent(_events, mapa_ferias[i], true);
+    }
+
+    for (var i = 0; i < mapa_ausencias.length; i++) {
+
+        pushEvent(_events, mapa_ausencias[i], false);
+    }
+
+    Object.keys(holidays).forEach(function(key, index) {
 
 
-	$(function() {
-		$('#calendar').fullCalendar({
-			defaultView: 'month',
-			weekends: false,
-			locale: 'pt',
-			timezone: false,
+        console.log(holidays[key]["translations"]["pt_PT"], holidays[key]["date"]);
+        _events.push({
+                        title: holidays[key]["translations"]["pt_PT"],
+                        start: holidays[key]["date"],
+                        color: "red"
+                    });
+    });
 
-			events: _events
-		})
-	});
+    $(function() {
+        $('#calendar').fullCalendar({
+            defaultView: 'month',
+            weekends: false,
+            locale: 'pt',
+            timezone: false,
+
+            events: _events
+        })
+    });
+}
+
+
+function pushEvent(array, event, vacation) {
+
+    if (vacation) {
+
+        description = " férias";
+    }
+
+    else {
+
+        description = " ausência";
+    }
+
+    _title = event.colaborador  + description;
+    _start = event.inicio;
+    _end = event.fim;
+    _observacoes = event.observacoes;
+    array.push({
+                    title : _title, 
+                    start : _start, 
+                    end : _end
+               });
 }

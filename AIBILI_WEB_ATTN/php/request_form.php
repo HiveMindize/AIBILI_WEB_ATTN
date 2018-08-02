@@ -19,9 +19,9 @@
             include_once 'header.php';
 
             if ($hierarquia != CEO) {
-
-                $db->query('START TRANSACTION;');
                 
+                $db->query('START TRANSACTION;');
+
                 $superiores = determinaSuperiores($db, $username, $hierarquia);
 
                 $hierarquia_superiores = authenticate($db, $superiores[0]);
@@ -60,9 +60,9 @@
             <textarea name="motivo" rows="3" cols="30" placeholder="Motivo a que se deve o requerimento..." required></textarea>
             <br />
 
-            <div id="upload">
+            <div id="uploaddiv">
                 <h4>Documentos</h4>
-                <input type="file" name="upload[]" id="upload" multiple>
+                <input type="file" name="upload[]" id="upload" multiple required>
             </div>
             <br />
             <br />

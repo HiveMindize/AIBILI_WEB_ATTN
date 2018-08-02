@@ -725,6 +725,24 @@ function mapaFerias($db) {
 }
 
 
+// mapaAusencias
+// argumentos: $db: PDO: para a base de dados usada
+// retorno: periodos de ausencia aprovados para todos os colaboradores
+function mapaAusencias($db) {
+
+    $query = "SELECT colaborador, inicio, fim, observacoes
+              FROM requerimento R INNER JOIN requerimento_ausencia A
+              ON R.id = A.id
+              WHERE estado = 'APROVADO';";
+
+    $result = execute ($db, $query);
+
+    $mapa = $result->fetchAll();
+
+    return $mapa;
+}
+
+
 //testInput
 // argumentos: $data: dados recebidos de um formulario
 // retorno: dados recebidos apos ser retirado espaco em branco do inicio e fim,
