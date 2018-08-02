@@ -6,13 +6,13 @@ define("COORDENADOR", 1);
 define("COLABORADOR", 0);
 
 // connect
-// argumentos: $dbtype: tipo de base de dados: MySQL, PostgreSQL, etc.
-//             $host: endereço IP do servidor de bases de dados
-//             $port: porto de ligacao a base de dados
-//             $dbname: nome da base de dados a usar
-//             $user: nome de utilizador para login na base de dados
-//             $password: para login na base de dados
-// retorno: PDO que permite fazer queries na base de dados especificada
+// argumentos: $dbtype: string: tipo de base de dados: MySQL, PostgreSQL, etc.
+//             $host: string: endereço IP do servidor de bases de dados
+//             $port: inteiro: porto de ligacao a base de dados
+//             $dbname: string: nome da base de dados a usar
+//             $user: string: nome de utilizador para login na base de dados
+//             $password: string: para login na base de dados
+// retorno: PDO: permite fazer queries na base de dados especificada
 function connect($dbtype, $host, $port, $dbname, $user, $password) {
 
     try {
@@ -28,6 +28,10 @@ function connect($dbtype, $host, $port, $dbname, $user, $password) {
     }
 }
 
+
+// uploadFiles
+// argumento: string: $id identificador unico do requerimento a que se associam os ficheiros
+// retorno: string: caminho para a pasta onde of ficheiros se encontram
 function uploadFiles($id) {
         
     // Count # of uploaded files in array
@@ -48,7 +52,7 @@ function uploadFiles($id) {
             // Setup our new file path
             $newFilePath = "../docs/$id/" . $_FILES['upload']['name'][$i];
 
-            // Upload the file into the temp dir
+            // Upload the file into the new dir
             move_uploaded_file($tmpFilePath, $newFilePath);
         }
     }
@@ -57,9 +61,9 @@ function uploadFiles($id) {
 }
 
 // authenticate
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: nível hierarquico do colaborador, ou erro se nao existir
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string:  utilizador a autenticar
+// retorno: inteiro: nível hierarquico do colaborador, ou erro se nao existir
 function authenticate($db, $username) {
 
     //se o colaborador nao existir, termina o processo de autenticacao
@@ -93,15 +97,15 @@ function authenticate($db, $username) {
 
     else  {
 
-        exit ("Não foi possível autenticá-lo. Verifique que está registado.");
+        exit ("Não foi possível verificar a identidade do utilizador $username. Verifique que está registado.<br />");
     }
 }
 
 
 // is_colaborador
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: booleano que indica se o colaborador existe
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador a autenticar
+// retorno: booleano: indica se o colaborador existe
 function is_colaborador($db, $username) {
 
     $query = "SELECT EXISTS (SELECT * 
@@ -120,9 +124,9 @@ function is_colaborador($db, $username) {
 
 
 // is_ceo
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: booleano que indica se o colaborador e' CEO
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador a autenticar
+// retorno: booleano: indica se o colaborador e' CEO
 function is_ceo($db, $username) {
 
     $query = "SELECT EXISTS (SELECT *
@@ -141,9 +145,9 @@ function is_ceo($db, $username) {
 }
 
 // is_financeiro
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: booleano que indica se o colaborador e' financeiro
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador a autenticar
+// retorno: booleano: indica se o colaborador e' financeiro
 function is_financeiro($db, $username) {
 
     $query = "SELECT EXISTS (SELECT *
@@ -163,9 +167,9 @@ function is_financeiro($db, $username) {
 
 
 // is_diretor
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: booleano que indica se o colaborador e' diretor de unidade
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador a autenticar
+// retorno: booleano: indica se o colaborador e' diretor de unidade
 function is_diretor($db, $username) {
 
     $query = "SELECT EXISTS (SELECT * 
@@ -184,9 +188,9 @@ function is_diretor($db, $username) {
 
 
 // is_coordenador
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador a autenticar
-// retorno: booleano que indica se o colaborador e' coordenador de equipa
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador a autenticar
+// retorno: booleano: indica se o colaborador e' coordenador de equipa
 function is_coordenador($db, $username) {
 
     $query = "SELECT EXISTS (SELECT * 
@@ -207,10 +211,10 @@ function is_coordenador($db, $username) {
 
 // execute
 // executa uma dada query MySQL através de prepared statements
-// argumentos: $db: PDO para a base de dados usada
-//             $query: query MySQL a executar
-//             $parameters: parametros a aplicar na query, default e' sem parametros
-// retorno: resultado da query (PDOStatement)
+// argumentos: $db: PDO: para a base de dados usada
+//             $query: string: query MySQL a executar
+//             $parameters: array(key => value) parametros a aplicar na query, default e' sem parametros
+// retorno: PDOStatement:
 function execute($db, $query, $parameters = array()) {
 
     try {
@@ -231,10 +235,10 @@ function execute($db, $query, $parameters = array()) {
 
 // determinaSuperiores
 // determina os superiores hierarquicos no nível imediatamente superior ao utilizador dado
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador para o qual determinar superiores
-//             $hierarquia: nivel hierarquico do colaborador
-// retorno: array: superiores hierarquicos do utilizador dado
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador para o qual determinar superiores
+//             $hierarquia: inteiro: nivel hierarquico do colaborador
+// retorno: array string: usernames dos superiores hierarquicos do utilizador dado
 function determinaSuperiores($db, $username, $hierarquia) {
 
     if ($hierarquia == COLABORADOR) {
@@ -261,14 +265,24 @@ function determinaSuperiores($db, $username, $hierarquia) {
         $superiores = getAdmins($db);
     }
 
+    else if ($hierarquia == FINANCEIRO) {
+
+        $superiores = getCEO($db);
+    }
+
+    if (empty($superiores)) {
+
+      exit("O utilizador $username não tem superiores registados.<br />");
+    }
+
     return $superiores;
 }
 
 
 // determinaCoordenadores
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador para o qual determinar superiores
-// retorno: array: coordenadores do utilizador dado
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador para o qual determinar superiores
+// retorno: array string: usernames dos coordenadores do utilizador dado
 function determinaCoordenadores($db, $username) {
 
     $query = "SELECT supervisor
@@ -286,9 +300,9 @@ function determinaCoordenadores($db, $username) {
 
 
 // determinaDiretores
-// argumentos: $db: PDO para a base de dados usada
+// argumentos: $db: PDO: paraa base de dados usada
 //             $username: utilizador para o qual determinar diretores
-// retorno: array: diretores das unidades a que o utilizador pertence
+// retorno: array string: usernames dos diretores das unidades a que o utilizador pertence
 function determinaDiretores($db, $username) {
 
     $query = "SELECT diretor
@@ -305,7 +319,9 @@ function determinaDiretores($db, $username) {
     return $diretores;
 }
 
-
+// getAdmins
+// argumento: $db: PDO: para a base de dados usada
+// retorno: array string: usernames dos administradores da organizacao
 function getAdmins($db) {
 
     $query = "SELECT username
@@ -316,21 +332,36 @@ function getAdmins($db) {
     $admins = $result->fetchAll(PDO::FETCH_COLUMN);
 
     return $admins;
+}
 
+// getCEO
+// argumento: $db: PDO: para a base de dados usada 
+function getCEO($db) {
+
+    $query = "SELECT username
+              FROM administrador
+              WHERE funcao = 'CEO';";
+
+    $result = execute($db, $query);
+
+    $ceo = $result->fetchColumn();
+
+    return $ceo['username'];
 }
 
 
 // submeteRequerimento
 // submete um requerimento de ausencia na base de dados
-// argumentos: $db: PDO para a base de dados usada
-//             $username: utilizador para o qual determinar superiores
-//             $tipo: ausencia ou ferias
-//             $datas: array com data de inicio e fim, em formato YYYY-MM-DD HH:ss
-//             $destinatarios: destinatarios do requerimento
-//             $motivo: motivo a que se deve o requerimento
+// argumentos: $db: PDO: para a base de dados usada
+//             $nivel: inteiro: nivel de hierarquia necessario para avaliar o requerimento
+//             $username: string: utilizador remetente do requerimento
+//             $tipo: string: ausencia ou ferias
+//             $datas: array string: datas de inicio e fim, em formato YYYY-MM-DD HH:ss
+//             $destinatarios: array string: usernames dos destinatarios do requerimento
+//             $motivo: string: motivo a que se deve o requerimento
 function submeteRequerimento($db, $nivel, $username, $tipo, $datas, $destinatarios, $motivo) {
 
-    $id = uniqid($username); 
+    $id = uniqid($username); // produz-se um ID unico a partir da timestamp atual
 
     //submete requerimento
     $query = "INSERT INTO requerimento(id, nivel, colaborador, inicio, fim, estado, observacoes)
@@ -361,11 +392,39 @@ function submeteRequerimento($db, $nivel, $username, $tipo, $datas, $destinatari
 
     execute($db, $query, $parameters);
 
-    registaDestinatarios($db, $id, $username, $destinatarios);
+    registaDestinatarios($db, $id, $destinatarios);
+}
+
+// cancelaRequerimento
+// apaga um requerimento dos registos
+// argumentos: $db: PDO: para a base de dados usada
+//             $id: string: identificador unico do requerimento a cancelar
+function cancelaRequerimento($db, $id) {
+
+    $query = "DELETE FROM requerimento_ausencia
+              WHERE id = :id;
+
+              DELETE FROM requerimento_ferias
+              WHERE id = :id;
+
+              DELETE FROM aprovacoes_necessarias
+              WHERE id = :id;
+
+              DELETE FROM requerimento
+              WHERE id = :id;";
+
+    $parameters = array(':id' => $id);
+
+    execute($db, $query, $parameters);
 }
 
 
-function registaDestinatarios($db, $id, $username, $destinatarios) {
+// registaDestinatarios
+// guarda os usernames dos colaboradores que devem avaliar um requerimento
+// argumentos: $db: PDO: para a base de dados usada
+//             $id: string: identificador unico do requerimento
+//             $destinatarios: array string: usernames dos colaboradores que vao avaliar o requerimento
+function registaDestinatarios($db, $id, $destinatarios) {
 
     foreach($destinatarios as $destinatario) {
 
@@ -379,6 +438,11 @@ function registaDestinatarios($db, $id, $username, $destinatarios) {
 }
 
 
+// requerimentosPendentes
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: utilizador que acede aos requerimentos
+//             $hierarquia: inteiro: nivel hierarquico do utilizador
+// retorna: array requerimentos (id, colaborador, periodo, estado, observacoes)
 function requerimentosPendentes($db, $username, $hierarquia) {
 
     $query = "SELECT *
@@ -394,13 +458,17 @@ function requerimentosPendentes($db, $username, $hierarquia) {
     return $requerimentos;
 }
 
-
-function nivelAprovado($db, $id, $hierarquia) {
+// nivelAprovado
+// argumentos: $db: PDO: para a base de dados usada
+//             $id: string: identificador unico do requerimento
+//             $nivel: nivel a aprovar o requerimento
+// retorna: booleano: se todos os destinatarios de um requerimento num certo nivel hierarquico aprovaram o requerimento
+function nivelAprovado($db, $id, $nivel) {
 
     $query = "SELECT username
               FROM aprovacoes_necessarias A INNER JOIN requerimento R
               ON A.id = R.id 
-              WHERE A.id = :id";
+              WHERE A.id = :id;";
 
     $parameters = array(':id' => $id);
 
@@ -408,13 +476,9 @@ function nivelAprovado($db, $id, $hierarquia) {
 
     $destinatarios = $result->fetchAll(PDO::FETCH_COLUMN);
 
-    echo($destinatarios);
-
     foreach ($destinatarios as $destinatario) {
 
-        echo($destinatario);
-
-        if (authenticate($db, $destinatario) == $hierarquia) {
+        if (authenticate($db, $destinatario) == $nivel) {
 
             return FALSE;
         }
@@ -423,81 +487,115 @@ function nivelAprovado($db, $id, $hierarquia) {
     return TRUE;
 }
 
-
+// avaliaRequerimento
+// aprova ou rejeita um requerimento. Escalona para o nivel superior quando aprovado.
+// $db: PDO: para a base de dados usada
+// $decisao: string: APROVADO ou REJEITADO
+// $username: string utilizador que avalia o requerimento
+// $hierarquia: string: nivel hierarquico do utilizador
+// $id: string: identificador unico do requerimento a avaliar
 function avaliaRequerimento($db, $decisao, $username, $hierarquia, $id) {
 
-    if ($hierarquia == CEO) {
+    if ($decisao === "REJEITADO") {
 
         $query = "DELETE FROM aprovacoes_necessarias
-                  WHERE id = :id;";
-
-        $parameters = array(':id' => $id);
-    }
-
-    else {
-
-        $query = "DELETE FROM aprovacoes_necessarias
-                  WHERE id = :id
-                  AND username = :username;";
-
-        $parameters = array(':id' => $id, ':username' => $username);
-    }
-
-    execute($db, $query, $parameters);
-
-    if ($decisao === "aprovado") {
-
-        $superiores = determinaSuperiores($db, $username, $hierarquia);
-
-        registaDestinatarios($db, $id, $username, $superiores);
-
-        if ($hierarquia == CEO) {
-
-            $query = "UPDATE requerimento
-                      SET estado = 'APROVADO'
-                      WHERE id = :id;";
-
-            $parameters = array(':id' => $id);
-
-            execute($db, $query, $parameters);
-        }
-
-        else if (nivelAprovado($db, $id, $hierarquia)) {
-
-            $hierarquia_superiores = authenticate($db, $superiores[0]);
-
-            escalonaRequerimento($db, $username, $id, $hierarquia_superiores);
-        }
-    }
-
-    else {
-
-        $query = "UPDATE requerimento
-                  SET estado = 'REJEITADO'
                   WHERE id = :id;
 
-                  DELETE FROM aprovacoes_necessarias
+                  UPDATE requerimento
+                  SET estado = 'REJEITADO'
                   WHERE id = :id;";
 
         $parameters = array(':id' => $id);
 
         execute($db, $query, $parameters);
     }
+
+    else {
+
+        // se o CEO aprova o requerimento, considera-se aprovado
+        if ($hierarquia == CEO) {
+
+            $query = "DELETE FROM aprovacoes_necessarias
+                      WHERE id = :id;
+
+                      UPDATE requerimento
+                      SET estado = 'APROVADO'
+                      WHERE id = :id;";
+
+            $parameters = array(':id' => $id);
+
+            execute($db, $query, $parameters);      
+        }
+
+
+        // caso seja outro colaborador, envia-se o requerimento para os seus superiores
+        else {
+
+            $query = "DELETE FROM aprovacoes_necessarias
+                      WHERE id = :id
+                      AND username = :username;";
+
+            $parameters = array(':id' => $id, ':username' => $username);
+
+            execute($db, $query, $parameters);
+
+            $superiores = determinaSuperiores($db, $username, $hierarquia);
+
+            registaDestinatarios($db, $id, $superiores);
+
+            // quando todos os destinatarios de um nivel hierarquico aprovarem, escalonar
+            if (nivelAprovado($db, $id, $hierarquia)) {
+
+                $hierarquia_superiores = authenticate($db, $superiores[0]);
+
+                escalonaRequerimento($db, $id, $hierarquia_superiores);
+            }
+        }
+    }
 }
 
 
-function escalonaRequerimento($db, $username, $id, $hierarquia) {
+// escalonaRequerimento
+// torna o requerimento visivel para um certo nivel do worklow de aprovacao
+// argumentos: $db: PDO: para a base de dados usada
+//             $id: string: identificador unico do requerimento
+//             $nivel: inteiro: nivel para o qual escalonar 
+function escalonaRequerimento($db, $id, $nivel) {
 
     $query = "UPDATE requerimento
-              SET nivel = :hierarquia
+              SET nivel = :nivel
               WHERE id = :id;";
 
-    $parameters = array(':hierarquia' => $hierarquia, ':id' => $id);
+    $parameters = array(':nivel' => $nivel, ':id' => $id);
 
     execute($db, $query, $parameters);
 }
 
 
+// getUnidadePorDiretor
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: diretor da unidade
+// retorno: string: unidade dirigida pelo colaborador dado
+function getUnidadePorDiretor($db, $username) {
+
+    $query = "SELECT nome
+              FROM unidade
+              WHERE diretor = :username;";
+
+    $parameters = array(':username' => $username);
+
+    $result = execute($db, $query, $parameters);
+
+    $unidade = $result->fetchColumn();
+
+    return $unidade;
+}
+
+
+// requerimentosColaborador
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: username do colaborador
+// retorno: array: requerimentos remetidos pelo colaborador dado
 function requerimentosColaborador($db, $username) {
 
     $query = "SELECT id, inicio, fim, estado, observacoes
@@ -514,14 +612,18 @@ function requerimentosColaborador($db, $username) {
 }
 
 
+// requerimentosEquipas
+// argumentos: $db: PDO: para a base de dados usada
+//             $username: string: username do coordenador das equipas
+// retorno: array: requerimentos remetidos pelas equipas coordenadas
 function requerimentosEquipas($db, $coordenador) {
 
     if (!is_coordenador($db, $coordenador)) {
 
-        exit ("Não coordena equipas.");
+        exit ("O utilizador $coordenador não coordena equipas.<br />");
     }
 
-    $query = "SELECT colaborador, inicio, fim
+    $query = "SELECT id, R.colaborador, inicio, fim, estado, observacoes
               FROM requerimento R INNER JOIN supervisiona S
               ON R.colaborador = S.colaborador
               WHERE S.supervisor = :username";
@@ -536,9 +638,14 @@ function requerimentosEquipas($db, $coordenador) {
 }
 
 
+
+// requerimentosUnidade
+// argumentos: $db: PDO: para a base de dados usada
+//             $unidade: string: nome da unidade
+// retorno: array: requerimentos remetidos pelos colaboradores da unidade
 function requerimentosUnidade($db, $unidade) {
 
-    $query = "SELECT colaborador, inicio, fim
+    $query = "SELECT id, R.colaborador, inicio, fim, estado, observacoes
               FROM requerimento R INNER JOIN pertence P
               ON R.colaborador = P.colaborador
               WHERE P.unidade = :unidade;";
@@ -552,13 +659,15 @@ function requerimentosUnidade($db, $unidade) {
     return $requerimentos;
 }
 
-
+// requerimentosOrganizacao
+// argumentos: $db: PDO: para a base de dados usada
+// retorno: array: requerimentos remetidos pelos colaboradores da organizacao
 function requerimentosOrganizacao($db) {
 
-    $query = "SELECT colaborador, inicio, fim
+    $query = "SELECT id, colaborador, inicio, fim, estado, observacoes
               FROM requerimento;";
 
-    $result = execute($db, $query, $parameters);
+    $result = execute($db, $query);
 
     $requerimentos = $result->fetchAll();
 
@@ -566,6 +675,41 @@ function requerimentosOrganizacao($db) {
 }
 
 
+// tabelaRequerimentos
+// apresenta os requerimentos dados numa tabela HTML
+// argumentos: $requerimentos: array: requerimentos a apresentar
+function tabelaRequerimentos($requerimentos) {
+
+    echo("<table style='width:75%'>
+            <tr>
+                <th>ID</th>
+                <th>Colaborador</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Estado</th>
+                <th>Observações</th>
+            </tr>");
+
+    foreach($requerimentos as $row) {
+
+        echo("<tr>
+                <td>{$row['id']}</td>
+                <td>{$row['colaborador']}</td>
+                <td>{$row['inicio']}</td>
+                <td>{$row['fim']}</td>
+                <td>{$row['estado']}</td>
+                <td>{$row['observacoes']}</td>
+              </tr>");
+    }
+
+    echo("</table>");
+}
+
+
+
+// mapaFerias
+// argumentos: $db: PDO: para a base de dados usada
+// retorno: periodos de ferias aprovados para todos os colaboradores
 function mapaFerias($db) {
 
     $query = "SELECT colaborador, inicio, fim
@@ -579,7 +723,6 @@ function mapaFerias($db) {
 
     return $mapa;
 }
-
 
 
 //testInput

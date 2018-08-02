@@ -14,33 +14,93 @@
 
             $db->query("START TRANSACTION;");
 
-            $requerimentos = requerimentosColaborador($db, $username);
+            $meus_requerimentos = requerimentosColaborador($db, $username);
+
+            if (is_ceo($db, $username) || is_financeiro($db, $username)) {
+
+                $requerimentos_organizacao = requerimentosOrganizacao($db);
+            }
+
+            if (is_diretor($db, $username)) {
+
+                $unidade = getUnidadePorDiretor($db, $username);
+                $requerimentos_unidade = requerimentosUnidade($db, $unidade); 
+            }
+
+            if (is_coordenador($db, $username)) {
+
+                $requerimentos_equipas = requerimentosEquipas($db, $username);
+            }
 
             $db->query("COMMIT;");
 
-            echo("<h3>Os meus requerimentos</h3>");
+            if (isset($meus_requerimentos)) {
 
-            echo("<table style='width:75%'>
-                    <tr>
-                        <th>ID</th>
-                        <th>Início</th>
-                        <th>Fim</th>
-                        <th>Estado</th>
-                        <th>Observações</th>
-                    </tr>");
+                echo("<h3>Os meus requerimentos</h3>");
 
-            foreach($requerimentos as $row) {
+                echo("<table style='width:75%'>
+                        <tr>
+                            <th>ID</th>
+                            <th>Início</th>
+                            <th>Fim</th>
+                            <th>Estado</th>
+                            <th>Observações</th>
+                        </tr>");
 
-                echo("<tr>
-                        <td>{$row['id']}</td>
-                        <td>{$row['inicio']}</td>
-                        <td>{$row['fim']}</td>
-                        <td>{$row['estado']}</td>
-                        <td>{$row['observacoes']}</td>
-                      </tr>");
+                foreach($meus_requerimentos as $row) {
+
+                    echo("<tr>
+                            <td>{$row['id']}</td>
+                            <td>{$row['inicio']}</td>
+                            <td>{$row['fim']}</td>
+                            <td>{$row['estado']}</td>
+                            <td>{$row['observacoes']}</td>");
+
+                    if ($row['estado'] === "PENDENTE") {
+
+                        echo("<td><a href=\"my_requests.php?id={$row['id']}\">Cancelar</a></td>");
+                    }
+
+                    echo("</tr>");
+                }
+
+                echo("</table>");
             }
 
-            echo("</table>");
+            if (isset($requerimentos_organizacao)) {
+
+                echo("<h3>Requerimentos da minha unidade</h3>");
+
+                tabelaRequerimentos($requerimentos_organizacao);
+            }
+
+            if (isset($requerimentos_unidade)) {
+
+                echo("<h3>Requerimentos da minha unidade</h3>");
+
+                tabelaRequerimentos($requerimentos_unidade);
+            }
+
+            if (isset($requerimentos_equipas)) {
+
+                echo("<h3>Requerimentos das minhas equipas</h3>");
+
+                tabelaRequerimentos($requerimentos_equipas);
+            }
+
+            if (isset($_GET['id'])) {
+
+                $id = testInput($_GET['id']);
+
+                $db->query("START TRANSACTION;");
+
+                cancelaRequerimento($db, $id);
+
+                $db->query("COMMIT;");
+
+                header('Location: my_requests.php');
+            }
+
         ?>
     </body>
 </html>

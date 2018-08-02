@@ -18,11 +18,15 @@
 
             include_once 'header.php';
 
-            if ($hierarquia != CEO && $hierarquia != FINANCEIRO) {
+            if ($hierarquia != CEO) {
+
+                $db->query('START TRANSACTION;');
                 
                 $superiores = determinaSuperiores($db, $username, $hierarquia);
 
                 $hierarquia_superiores = authenticate($db, $superiores[0]);
+
+                $db->query('COMMIT;');
 
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -30,7 +34,11 @@
                     $datas = explode(" - ", testInput($_POST["datas"]));
                     $motivo = testInput($_POST["motivo"]);
 
+                    $db->query('START TRANSACTION;');
+
                     submeteRequerimento($db, $hierarquia_superiores, $username, $tipo, $datas, $superiores, $motivo);
+
+                    $db->query('COMMIT;');
                 }
             }
         ?>
@@ -54,7 +62,7 @@
 
             <div id="upload">
                 <h4>Documentos</h4>
-                <input type="file" name="upload[]" id="upload" multiple required>
+                <input type="file" name="upload[]" id="upload" multiple>
             </div>
             <br />
             <br />

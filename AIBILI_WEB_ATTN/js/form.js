@@ -19,11 +19,12 @@ $(document).ready(function () {
         
         if ($(this).attr("value") === "ausencia") {
             $("#upload").show();
-
+            $("#upload").attr("required") = true;
         }
 
         if ($(this).attr("value") === "ferias") {
             $("#upload").hide();
+            $("#upload").attr("required") = true;
         }
     });
 });

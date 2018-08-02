@@ -6,7 +6,7 @@
     $user = "root";
     $password = "";
 
-    $username = "hive";
+    $username = "rivec";
 
     date_default_timezone_set("Europe/Lisbon");
 

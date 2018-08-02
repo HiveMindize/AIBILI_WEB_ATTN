@@ -25,11 +25,7 @@
                     $id = testInput($_GET['id']);
                     $decisao = testInput($_GET['decisao']);
 
-                    $db->query("START TRANSACTION;");
-
                     avaliaRequerimento($db, $decisao, $username, $hierarquia, $id);
-
-                    $db->query("COMMIT;");
 
                     header('Location: pending_requests.php');
                 }
@@ -59,9 +55,9 @@
 
                 if ($hierarquia != COLABORADOR && $hierarquia != FINANCEIRO) {
 
-                    echo("<td><a href=\"pending_requests.php?id={$row['id']}&decisao=aprovado\">Aprovar</a>
+                    echo("<td><a href=\"pending_requests.php?id={$row['id']}&decisao=APROVADO\">Aprovar</a>
                             <br />
-                            <a href=\"pending_requests.php?id={$row['id']}&decisao=rejeitado\">Rejeitar</a></td>");
+                            <a href=\"pending_requests.php?id={$row['id']}&decisao=REJEITADO\">Rejeitar</a></td>");
                 }
 
                 echo("</tr>");
