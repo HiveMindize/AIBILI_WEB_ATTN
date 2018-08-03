@@ -1,7 +1,9 @@
 # Plugins third-party utilizados:
 [Date Range Picker](http://www.daterangepicker.com/) por Dan Grossman, MIT License
+
 [FullCalendar](https://fullcalendar.io/) por Adam Shaw, MIT License
-[date-holidays](https://github.com/commenthol/date-holidays) por commenthol, ISC License
+
+[Yasumi](https://azuyalabs.github.io/yasumi/) por AzuyaLabs, MIT License
 
 # Descrição do domínio
 Um colaborador é identificado pelo seu nome de utilizador e caraterizado pelo seu nome completo.  
@@ -10,7 +12,7 @@ Um colaborador pode pertencer a uma ou várias equipas (ou nenhuma), tendo nesse
 
 Uma unidade é identificada pelo seu nome.  
 Um colaborador pertence a uma ou mais unidades. Uma unidade tem pelo menos um colaborador.  
-Uma unidade tem sempre um único diretor de cada vez (podem delegar). Um diretor pode apenas dirigir uma unidade de cada vez.  
+Uma unidade tem sempre um único diretor de cada vez. Um diretor pode apenas dirigir uma unidade de cada vez.  
 
 Um projeto é identificado pelo seu nome.  
 Um colaborador pode colaborar em projectos. Um projecto pode ter vários colaboradores.  
@@ -19,33 +21,31 @@ Uma atividade é realizada por um colaborador e identificada por um identificado
 a hora de início e o tempo de duração em horas e minutos.  
 Uma atividade pode estar associada a projectos. Um projecto pode ser constituído por atividades.  
 
-Um colaborador pode fazer um requerimento de ausência. Uma ausência é identificada pelo seu início e fim, e não podem haver  
-ausências sobrepostas. Um requerimento tem um identificador único e pode estar num de três estados: pendente, aprovado ou rejeitado.  
-Uma ausência pode ser pontual (por exemplo, uma consulta) ou um período de férias. Ausências pontuais têm uma categoria e são  acompanhadas de um documento justificativo.  
+Um colaborador pode fazer um requerimento. Um requerimento tem um identificador único e pode estar num de três estados: pendente, aprovado ou rejeitado. Tem também associado um nível hierárquico que
+corresponde ao nível hierárquico dos colaboradores que o podem avaliar.  
+Os requerimentos avaliam períodos de ausência ou um período de férias. As ausências são  acompanhadas de um documento justificativo.  
 
 # Validação dos diagramas de casos de uso
 [UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
 
 Colaborador - Pode criar requerimentos de férias ou reportar ausências, podendo anexar documentos no processo. Pode
                   consultar os seus requerimentos, modificar requerimentos que não tenham sido aceites ou rejeitados ainda, e
-                  visualizar o seu mapa de férias (possivelmente de assiduidade em geral) em vista de calendário. Pode eventualmente
-                  exportar este mapa para um ficheiro (Excel, PDF?).  
-                  Pode eventualmente agendar as suas atividades e reportar a sua realização.
+                  visualizar o seu mapa de assiduidade em vista de calendário.
 
 Coordenador - Mesmas operações do colaborador. Adicionalmente:  
-                  Pode consultar e exportar os mapas de todos os colaboradores da equipa que supervisiona.  
+                  Pode consultar os mapas de todos os colaboradores da equipa que supervisiona.  
                   Pode encaminhar um requerimento para o diretor da unidade a que pertence para continuar o processo de
                   aprovação, ou rejeitá-lo no momento.
 
 Diretor - Mesmas operações do coordenador. Adicionalmente:
-              Pode consultar e exportar os mapas das equipas que pertencem à sua unidade.  
-              Pode encaminhar um requerimento para a administração (CEO e Financeiros).
+              Pode consultar  os mapas das equipas que pertencem à sua unidade.  
+              Pode encaminhar um requerimento para a administração (CEO e Financeiros) após o aprovar.
 
 CEO - Mesmas operações do diretor. Adicionalmente:
-          Pode consultar e exportar os mapas de todas as unidades da organização.  
+          Pode consultar os mapas de todas as unidades da organização.  
           Pode aprovar um requerimento após ter sido aprovado por todos os nós da cadeia.
 
-Financeiro - Mesmas operações do CEO, exceto que não pode aceitar ou rejeitar um requerimento.
+Financeiro - Mesmas operações do CEO, exceto que não pode avaliar um requerimento.
 
 
 # Modelo de Dados
@@ -122,17 +122,13 @@ Autenticação assegurada pelas tabelas:
 
 -Administradores podem ver todas as entradas, mas apenas o CEO as pode aprovar ou rejeitar.
 
-No início do processo, verificar o nome de utilizador e fazer as queries apropriadas.
+No início do processo, verifica o nome de utilizador e fazer as queries apropriadas.
 
 ## Configurações:
 Variável cujo valor muda consoante o nível hierárquico do colaborador. Gerir acesso a partir desse princípio.
 
 ## Tabelas de feriados nacionais:
-Lista de feriados nacionais disponibilizada pelo serviço open-source [Yasumi](https://azuyalabs.github.io/yasumi/) por AzuyaLabs.
-
-## Templates:
-Tabela extra na base de dados com designação da template, tempo que ocupa e periodicidade (semanal, mensal, etc).  
-Passível de se introduzir na agenda com a periodicidade pretendida.
+Lista de feriados nacionais disponibilizada pela biblioteca PHP open-source [Yasumi](https://azuyalabs.github.io/yasumi/) por AzuyaLabs.
 
 ## Dados de ausências / férias - codificação:
 Na base de dados, ausências pontuais e férias são guardadas em tabelas separadas.

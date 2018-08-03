@@ -8,7 +8,7 @@ $(function() {
     },
 
     isInvalidDate: function(date) {
-  		return (date.day() == 0 || date.day() == 6);
+  		return (date.day() == 0 || date.day() == 6); //fins de semana
 	  }
   });
 });

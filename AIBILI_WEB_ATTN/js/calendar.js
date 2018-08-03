@@ -42,7 +42,11 @@ function showCalendar(mapa_ferias, mapa_ausencias, holidays) {
     });
 }
 
-
+// pushEvent
+// adiciona um evento, no formato de array suportado pelo FullCalendar
+// argumentos: array: array de eventos
+//             event: array: evento a adicionar (colaborador, inicio e fim)
+//             vacation: booleano: se é um evento de ausencia ou ferias
 function pushEvent(array, event, vacation) {
 
     if (vacation) {
