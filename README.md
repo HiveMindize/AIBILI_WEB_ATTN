@@ -135,7 +135,7 @@ Na base de dados, ausências pontuais e férias são guardadas em tabelas separa
 
 # Estrutura de pastas:
     -AIBILI_WEB_ATTN/
-        -docs
+        -uploads
         -index.php
         -php/
           -attendance_map.php
