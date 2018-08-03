@@ -1,3 +1,7 @@
+Desenvolvido no âmbito dos [IST Summer Internships](https://istsi.org/) para a [Associação para Investigação Biomédica em Luz e Imagem](https://www.aibili.pt/).
+
+[Apreciação do estágio.](https://github.com/HiveMindize/AIBILI_WEB_ATTN/blob/master/AIBILI_WEB_ATTN/docs/Aprecia%C3%A7%C3%A3o.pdf)
+
 # Plugins third-party utilizados:
 [Date Range Picker](http://www.daterangepicker.com/) por Dan Grossman, MIT License
 
@@ -26,7 +30,7 @@ corresponde ao nível hierárquico dos colaboradores que o podem avaliar.
 Os requerimentos avaliam períodos de ausência ou um período de férias. As ausências são  acompanhadas de um documento justificativo.  
 
 # Validação dos diagramas de casos de uso
-[UML Use Case Diagram](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
+[UML Use Case Diagram](https://github.com/HiveMindize/AIBILI_WEB_ATTN/blob/master/AIBILI_WEB_ATTN/docs/UML%20Use%20Cases%20AIBILI_WEB_ATTN.pdf)
 
 Colaborador - Pode criar requerimentos de férias ou reportar ausências, podendo anexar documentos no processo. Pode
                   consultar os seus requerimentos, modificar requerimentos que não tenham sido aceites ou rejeitados ainda, e
@@ -49,7 +53,7 @@ Financeiro - Mesmas operações do CEO, exceto que não pode avaliar um requerim
 
 
 # Modelo de Dados
-[Entity-Relationship Model](https://www.lucidchart.com/documents/edit/a3c0dfd0-8d7e-418e-a441-6910246505de/0)
+[Entity-Relationship Model](https://github.com/HiveMindize/AIBILI_WEB_ATTN/blob/master/AIBILI_WEB_ATTN/docs/ERD%20AIBILI_WEB_ATTN.pdf)
 
 **Modelo Relacional da BD**
 
