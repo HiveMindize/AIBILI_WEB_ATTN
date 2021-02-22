@@ -7,7 +7,7 @@ Desenvolvido no âmbito dos [IST Summer Internships](https://istsi.org/) para a 
 
 [FullCalendar](https://fullcalendar.io/) por Adam Shaw, MIT License
 
-[Yasumi](https://azuyalabs.github.io/yasumi/) por AzuyaLabs, MIT License
+[Yasumi](https://www.yasumi.dev/) por AzuyaLabs, MIT License
 
 Bibliotecas [jQuery](https://jquery.com/) e [MomentJS](https://momentjs.com/).
 
